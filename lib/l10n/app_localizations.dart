@@ -719,7 +719,7 @@ abstract class AppLocalizations {
   /// No description provided for @routeInfo.
   ///
   /// In en, this message translates to:
-  /// **'The full journey both ways is added automatically. An admin sets the official fares.'**
+  /// **'Add the start, any stops in between, and the final stop. You\'ll price each leg next; an admin approves the prices.'**
   String get routeInfo;
 
   /// No description provided for @submitForApproval.
@@ -733,18 +733,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Assign taxi'**
   String get assignTaxi;
-
-  /// No description provided for @journeysAndFares.
-  ///
-  /// In en, this message translates to:
-  /// **'Journeys and fares'**
-  String get journeysAndFares;
-
-  /// No description provided for @farePending.
-  ///
-  /// In en, this message translates to:
-  /// **'Fare pending'**
-  String get farePending;
 
   /// No description provided for @notifications.
   ///
@@ -841,6 +829,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Status'**
   String get status;
+
+  /// No description provided for @legsAndPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs and prices'**
+  String get legsAndPrices;
+
+  /// No description provided for @legsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Each pair of neighbouring stops is a leg, both ways, and the full route has its own price. You set the prices; an admin approves them.'**
+  String get legsInfo;
+
+  /// No description provided for @outboundLegs.
+  ///
+  /// In en, this message translates to:
+  /// **'Outbound legs'**
+  String get outboundLegs;
+
+  /// No description provided for @returnLegs.
+  ///
+  /// In en, this message translates to:
+  /// **'Return legs'**
+  String get returnLegs;
+
+  /// No description provided for @fullRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Full route'**
+  String get fullRoute;
+
+  /// No description provided for @setPrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Set prices'**
+  String get setPrices;
+
+  /// No description provided for @changePrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Change prices'**
+  String get changePrices;
+
+  /// No description provided for @notPriced.
+  ///
+  /// In en, this message translates to:
+  /// **'Not priced'**
+  String get notPriced;
+
+  /// No description provided for @awaitingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting approval'**
+  String get awaitingApproval;
+
+  /// No description provided for @newPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'New: {amount}'**
+  String newPrice(String amount);
+
+  /// No description provided for @priceAllLegs.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a price for every leg before submitting ({count} left).'**
+  String priceAllLegs(int count);
+
+  /// No description provided for @underReview.
+  ///
+  /// In en, this message translates to:
+  /// **'An admin is reviewing this route and its prices.'**
+  String get underReview;
+
+  /// No description provided for @pendingChangesInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} price change(s) are waiting for an admin. Passengers pay the current prices until then.'**
+  String pendingChangesInfo(int count);
+
+  /// No description provided for @priceChangeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Passengers keep paying the current prices until an admin approves your change.'**
+  String get priceChangeInfo;
+
+  /// No description provided for @applyFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply from'**
+  String get applyFrom;
+
+  /// No description provided for @applyWhenApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'As soon as approved'**
+  String get applyWhenApproved;
+
+  /// No description provided for @pricesSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Prices saved'**
+  String get pricesSaved;
+
+  /// No description provided for @priceChangeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Price change sent for approval'**
+  String get priceChangeSent;
+
+  /// No description provided for @priceEtb.
+  ///
+  /// In en, this message translates to:
+  /// **'Price (ETB)'**
+  String get priceEtb;
+
+  /// No description provided for @invalidPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a price above 0'**
+  String get invalidPrice;
+
+  /// No description provided for @nothingChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'No price changed'**
+  String get nothingChanged;
+
+  /// No description provided for @viewTaxi.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxi details'**
+  String get viewTaxi;
+
+  /// No description provided for @notOnAnyRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Not assigned to any route yet.'**
+  String get notOnAnyRoute;
 }
 
 class _AppLocalizationsDelegate

@@ -56,7 +56,13 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
     final live = ref.watch(liveTaxiProvider(widget.taxiId));
     final api = ref.read(operationsApiProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(live.value?.plateNumber ?? l10n.taxi)),
+      appBar: AppBar(title: Text(live.value?.plateNumber ?? l10n.taxi), actions: [
+        IconButton(
+          tooltip: l10n.viewTaxi,
+          icon: const Icon(Icons.info_outline),
+          onPressed: () => context.push('/fleet/taxis/${widget.taxiId}'),
+        ),
+      ]),
       body: AsyncBody(
         value: live,
         onRefresh: () => ref.refresh(liveTaxiProvider(widget.taxiId).future),
@@ -67,7 +73,15 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
             if (op == null)
               Text(l10n.noActiveOperations)
             else ...[
-              Text('${op.route.name ?? ''} · ${op.driver.name ?? ''}', style: Theme.of(context).textTheme.titleMedium),
+              InkWell(
+                onTap: () => context.push('/fleet/routes/${op.route.id}'),
+                child: Row(children: [
+                  Flexible(
+                    child: Text('${op.route.name ?? ''} · ${op.driver.name ?? ''}', style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  const Icon(Icons.chevron_right, size: 20),
+                ]),
+              ),
               const SizedBox(height: 4),
               Text('${l10n.completedTrips}: ${op.completedTrips} · ${l10n.passengers}: ${op.passengers} · ${money(op.revenue)}'),
               const SizedBox(height: 16),

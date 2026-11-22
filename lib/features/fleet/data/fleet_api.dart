@@ -35,8 +35,19 @@ class FleetApi {
       _api.post('/api/merchant/drivers', body: request, map: (d) => Driver.fromJson(d as Json));
 
   // ---- routes
-  Future<List<RouteInfo>> routes({String? status}) async =>
-      (await _api.getPage('/api/merchant/routes', RouteInfo.fromJson, query: {'size': 100, 'status': status})).content;
+  Future<List<RouteInfo>> routes({String? status, int? taxiId}) async => (await _api.getPage(
+          '/api/merchant/routes', RouteInfo.fromJson, query: {'size': 100, 'status': status, 'taxiId': taxiId}))
+      .content;
+
+  /// My prices per leg. On an approved route they wait for an admin; the current prices stay meanwhile.
+  Future<RouteInfo> setFares(int routeId, Map<int, num> fares, {DateTime? effectiveFrom}) => _api.put(
+        '/api/merchant/routes/$routeId/fares',
+        body: {
+          'fares': [for (final e in fares.entries) {'subRouteId': e.key, 'amount': e.value}],
+          if (effectiveFrom != null) 'effectiveFrom': effectiveFrom.toIso8601String().substring(0, 19),
+        },
+        map: (d) => RouteInfo.fromJson(d as Json),
+      );
 
   Future<RouteInfo> route(int id) => _api.get('/api/merchant/routes/$id', map: (d) => RouteInfo.fromJson(d as Json));
 

@@ -321,19 +321,13 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get routeInfo =>
-      'ሙሉው ጉዞ በሁለቱም አቅጣጫ በራሱ ይጨመራል። ኦፊሴላዊ ታሪፍ በአስተዳዳሪ ይወሰናል።';
+      'መነሻውን፣ በመካከል ያሉ ፌርማታዎችን እና መድረሻውን ያስገቡ። ቀጥሎ ለእያንዳንዱ ክፍል ዋጋ ያስገባሉ፤ አስተዳዳሪ ያጸድቃል።';
 
   @override
   String get submitForApproval => 'ለማጽደቅ አስገባ';
 
   @override
   String get assignTaxi => 'ታክሲ መድብ';
-
-  @override
-  String get journeysAndFares => 'ጉዞዎች እና ታሪፎች';
-
-  @override
-  String get farePending => 'ታሪፍ አልተወሰነም';
 
   @override
   String get notifications => 'ማሳወቂያዎች';
@@ -382,4 +376,81 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get status => 'ሁኔታ';
+
+  @override
+  String get legsAndPrices => 'ክፍሎች እና ዋጋዎች';
+
+  @override
+  String get legsInfo =>
+      'እያንዳንዱ ተከታታይ የፌርማታ ጥንድ በሁለቱም አቅጣጫ አንድ ክፍል ነው፤ ሙሉው መስመርም የራሱ ዋጋ አለው። ዋጋውን እርስዎ ያስገባሉ፤ አስተዳዳሪ ያጸድቃል።';
+
+  @override
+  String get outboundLegs => 'የመሄጃ ክፍሎች';
+
+  @override
+  String get returnLegs => 'የመመለሻ ክፍሎች';
+
+  @override
+  String get fullRoute => 'ሙሉ መስመር';
+
+  @override
+  String get setPrices => 'ዋጋ ያስገቡ';
+
+  @override
+  String get changePrices => 'ዋጋ ይቀይሩ';
+
+  @override
+  String get notPriced => 'ዋጋ አልገባም';
+
+  @override
+  String get awaitingApproval => 'ማጽደቅ በመጠበቅ ላይ';
+
+  @override
+  String newPrice(String amount) {
+    return 'አዲስ: $amount';
+  }
+
+  @override
+  String priceAllLegs(int count) {
+    return 'ከማስገባትዎ በፊት ለሁሉም ክፍሎች ዋጋ ያስገቡ ($count ቀርተዋል)።';
+  }
+
+  @override
+  String get underReview => 'አስተዳዳሪ ይህን መስመር እና ዋጋዎቹን እየገመገመ ነው።';
+
+  @override
+  String pendingChangesInfo(int count) {
+    return '$count የዋጋ ለውጥ(ዎች) አስተዳዳሪን እየጠበቁ ነው። እስከዚያው ተሳፋሪዎች የአሁኑን ዋጋ ይከፍላሉ።';
+  }
+
+  @override
+  String get priceChangeInfo =>
+      'አስተዳዳሪ ለውጡን እስኪያጸድቅ ድረስ ተሳፋሪዎች የአሁኑን ዋጋ ይከፍላሉ።';
+
+  @override
+  String get applyFrom => 'ከዚህ ቀን ጀምሮ';
+
+  @override
+  String get applyWhenApproved => 'እንደጸደቀ ወዲያውኑ';
+
+  @override
+  String get pricesSaved => 'ዋጋዎቹ ተቀምጠዋል';
+
+  @override
+  String get priceChangeSent => 'የዋጋ ለውጡ ለማጽደቅ ተልኳል';
+
+  @override
+  String get priceEtb => 'ዋጋ (ብር)';
+
+  @override
+  String get invalidPrice => 'ከ0 በላይ ዋጋ ያስገቡ';
+
+  @override
+  String get nothingChanged => 'ምንም ዋጋ አልተቀየረም';
+
+  @override
+  String get viewTaxi => 'የታክሲ ዝርዝር';
+
+  @override
+  String get notOnAnyRoute => 'እስካሁን ለምንም መስመር አልተመደበም።';
 }

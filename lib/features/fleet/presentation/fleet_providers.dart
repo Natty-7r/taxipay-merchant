@@ -16,3 +16,7 @@ final routeProvider =
 
 final seatTemplatesProvider =
     FutureProvider.autoDispose<List<SeatTemplate>>((ref) => ref.watch(fleetApiProvider).seatTemplates());
+
+/// Routes a taxi is assigned to.
+final taxiRoutesProvider =
+    FutureProvider.autoDispose.family<List<RouteInfo>, int>((ref, taxiId) => ref.watch(fleetApiProvider).routes(taxiId: taxiId));

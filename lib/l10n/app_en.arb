@@ -103,11 +103,9 @@
   "stops": "Stops in order",
   "addStop": "Add stop",
   "stopName": "Stop",
-  "routeInfo": "The full journey both ways is added automatically. An admin sets the official fares.",
+  "routeInfo": "Add the start, any stops in between, and the final stop. You'll price each leg next; an admin approves the prices.",
   "submitForApproval": "Submit for approval",
   "assignTaxi": "Assign taxi",
-  "journeysAndFares": "Journeys and fares",
-  "farePending": "Fare pending",
   "notifications": "Notifications",
   "markAllRead": "Mark all read",
   "telegram": "Telegram",
@@ -123,5 +121,49 @@
   "retry": "Try again",
   "cancel": "Cancel",
   "saved": "Saved",
-  "status": "Status"
+  "status": "Status",
+  "legsAndPrices": "Legs and prices",
+  "legsInfo": "Each pair of neighbouring stops is a leg, both ways, and the full route has its own price. You set the prices; an admin approves them.",
+  "outboundLegs": "Outbound legs",
+  "returnLegs": "Return legs",
+  "fullRoute": "Full route",
+  "setPrices": "Set prices",
+  "changePrices": "Change prices",
+  "notPriced": "Not priced",
+  "awaitingApproval": "Awaiting approval",
+  "newPrice": "New: {amount}",
+  "@newPrice": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "priceAllLegs": "Set a price for every leg before submitting ({count} left).",
+  "@priceAllLegs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "underReview": "An admin is reviewing this route and its prices.",
+  "pendingChangesInfo": "{count} price change(s) are waiting for an admin. Passengers pay the current prices until then.",
+  "@pendingChangesInfo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "priceChangeInfo": "Passengers keep paying the current prices until an admin approves your change.",
+  "applyFrom": "Apply from",
+  "applyWhenApproved": "As soon as approved",
+  "pricesSaved": "Prices saved",
+  "priceChangeSent": "Price change sent for approval",
+  "priceEtb": "Price (ETB)",
+  "invalidPrice": "Enter a price above 0",
+  "nothingChanged": "No price changed",
+  "viewTaxi": "Taxi details",
+  "notOnAnyRoute": "Not assigned to any route yet."
 }

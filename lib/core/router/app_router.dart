@@ -65,7 +65,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(path: 'taxis/:id', builder: (_, s) => TaxiDetailScreen(taxiId: int.parse(s.pathParameters['id']!))),
               GoRoute(path: 'drivers/new', builder: (_, _) => const AddDriverScreen()),
               GoRoute(path: 'routes/new', builder: (_, _) => const AddRouteScreen()),
-              GoRoute(path: 'routes/:id', builder: (_, s) => RouteDetailScreen(routeId: int.parse(s.pathParameters['id']!))),
+              GoRoute(
+                path: 'routes/:id',
+                builder: (_, s) => RouteDetailScreen(routeId: int.parse(s.pathParameters['id']!)),
+                routes: [
+                  GoRoute(path: 'prices', builder: (_, s) => RoutePricesScreen(routeId: int.parse(s.pathParameters['id']!))),
+                ],
+              ),
             ]),
           ]),
           StatefulShellBranch(routes: [GoRoute(path: '/payments', builder: (_, _) => const PaymentsScreen())]),

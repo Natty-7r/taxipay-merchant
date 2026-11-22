@@ -324,19 +324,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get routeInfo =>
-      'The full journey both ways is added automatically. An admin sets the official fares.';
+      'Add the start, any stops in between, and the final stop. You\'ll price each leg next; an admin approves the prices.';
 
   @override
   String get submitForApproval => 'Submit for approval';
 
   @override
   String get assignTaxi => 'Assign taxi';
-
-  @override
-  String get journeysAndFares => 'Journeys and fares';
-
-  @override
-  String get farePending => 'Fare pending';
 
   @override
   String get notifications => 'Notifications';
@@ -387,4 +381,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get status => 'Status';
+
+  @override
+  String get legsAndPrices => 'Legs and prices';
+
+  @override
+  String get legsInfo =>
+      'Each pair of neighbouring stops is a leg, both ways, and the full route has its own price. You set the prices; an admin approves them.';
+
+  @override
+  String get outboundLegs => 'Outbound legs';
+
+  @override
+  String get returnLegs => 'Return legs';
+
+  @override
+  String get fullRoute => 'Full route';
+
+  @override
+  String get setPrices => 'Set prices';
+
+  @override
+  String get changePrices => 'Change prices';
+
+  @override
+  String get notPriced => 'Not priced';
+
+  @override
+  String get awaitingApproval => 'Awaiting approval';
+
+  @override
+  String newPrice(String amount) {
+    return 'New: $amount';
+  }
+
+  @override
+  String priceAllLegs(int count) {
+    return 'Set a price for every leg before submitting ($count left).';
+  }
+
+  @override
+  String get underReview => 'An admin is reviewing this route and its prices.';
+
+  @override
+  String pendingChangesInfo(int count) {
+    return '$count price change(s) are waiting for an admin. Passengers pay the current prices until then.';
+  }
+
+  @override
+  String get priceChangeInfo =>
+      'Passengers keep paying the current prices until an admin approves your change.';
+
+  @override
+  String get applyFrom => 'Apply from';
+
+  @override
+  String get applyWhenApproved => 'As soon as approved';
+
+  @override
+  String get pricesSaved => 'Prices saved';
+
+  @override
+  String get priceChangeSent => 'Price change sent for approval';
+
+  @override
+  String get priceEtb => 'Price (ETB)';
+
+  @override
+  String get invalidPrice => 'Enter a price above 0';
+
+  @override
+  String get nothingChanged => 'No price changed';
+
+  @override
+  String get viewTaxi => 'Taxi details';
+
+  @override
+  String get notOnAnyRoute => 'Not assigned to any route yet.';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -51,6 +52,10 @@ class TaxiDetailScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           SeatGrid(rows: t.seatRows, seatBuilder: (code) => SeatBox(code)),
           const Divider(height: 32),
+          Text(l10n.routes, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 4),
+          _TaxiRoutes(taxiId: taxiId),
+          const Divider(height: 32),
           Text(l10n.qrCode, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           if (t.qrUrl == null)
@@ -76,4 +81,33 @@ class TaxiDetailScreen extends ConsumerWidget {
           Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
         ]),
       );
+}
+
+/// The routes this taxi is assigned to; tap through to a route.
+class _TaxiRoutes extends ConsumerWidget {
+  const _TaxiRoutes({required this.taxiId});
+
+  final int taxiId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final routes = ref.watch(taxiRoutesProvider(taxiId));
+    return routes.when(
+      loading: () => const Padding(padding: EdgeInsets.all(12), child: LinearProgressIndicator()),
+      error: (e, _) => Text(e.toString()),
+      data: (list) => list.isEmpty
+          ? Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(context.l10n.notOnAnyRoute))
+          : Column(children: [
+              for (final r in list)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.alt_route),
+                  title: Text(r.name),
+                  subtitle: Text(r.stops.join(' → '), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  trailing: Row(mainAxisSize: MainAxisSize.min, children: [StatusChip(r.status), const Icon(Icons.chevron_right)]),
+                  onTap: () => context.push('/fleet/routes/${r.id}'),
+                ),
+            ]),
+    );
+  }
 }

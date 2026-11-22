@@ -113,22 +113,58 @@ class Driver {
       );
 }
 
+/// A leg of a route: two neighbouring stops, or the full route. Priced by the merchant.
 class SubRouteInfo {
-  SubRouteInfo({required this.id, required this.fromName, required this.toName, required this.direction, this.fare});
+  SubRouteInfo({
+    required this.id,
+    required this.fromName,
+    required this.toName,
+    required this.direction,
+    required this.fullRoute,
+    this.fare,
+    this.proposedFare,
+    this.proposedEffectiveFrom,
+  });
 
   final int id;
   final String fromName;
   final String toName;
   final String direction;
+  final bool fullRoute;
+
+  /// Approved price passengers pay now.
   final num? fare;
+
+  /// My price waiting for admin approval.
+  final num? proposedFare;
+  final DateTime? proposedEffectiveFrom;
+
+  bool get forward => direction == 'FORWARD';
+
+  /// The price to show in an edit field: my pending price, else the approved one.
+  num? get latestPrice => proposedFare ?? fare;
 
   factory SubRouteInfo.fromJson(Json j) => SubRouteInfo(
         id: (j['id'] as num).toInt(),
         fromName: j['fromName'] as String,
         toName: j['toName'] as String,
         direction: j['direction'] as String,
+        fullRoute: (j['fullRoute'] as bool?) ?? false,
         fare: j['fare'] as num?,
+        proposedFare: j['proposedFare'] as num?,
+        proposedEffectiveFrom: j['proposedEffectiveFrom'] == null ? null : DateTime.parse(j['proposedEffectiveFrom'] as String),
       );
+}
+
+/// Legs in display order: outbound legs, return legs, full route.
+enum LegGroup { outbound, inbound, full }
+
+extension LegGrouping on List<SubRouteInfo> {
+  Map<LegGroup, List<SubRouteInfo>> grouped() => {
+        LegGroup.outbound: where((s) => !s.fullRoute && s.forward).toList(),
+        LegGroup.inbound: where((s) => !s.fullRoute && !s.forward).toList(),
+        LegGroup.full: where((s) => s.fullRoute).toList(),
+      }..removeWhere((_, v) => v.isEmpty);
 }
 
 class AssignedTaxi {
@@ -153,6 +189,7 @@ class RouteInfo {
     required this.stops,
     required this.subRoutes,
     required this.unpricedSubRoutes,
+    required this.pendingFareChanges,
     required this.taxis,
   });
 
@@ -165,9 +202,13 @@ class RouteInfo {
   final List<String> stops;
   final List<SubRouteInfo> subRoutes;
   final int unpricedSubRoutes;
+  final int pendingFareChanges;
   final List<AssignedTaxi> taxis;
 
   bool get editable => status == 'DRAFT' || status == 'REJECTED';
+
+  /// Approved (or paused) — price changes need an admin's approval.
+  bool get live => status == 'APPROVED' || status == 'INACTIVE';
 
   factory RouteInfo.fromJson(Json j) => RouteInfo(
         id: (j['id'] as num).toInt(),
@@ -179,6 +220,7 @@ class RouteInfo {
         stops: listOf(j['points'], (p) => p['name'] as String),
         subRoutes: listOf(j['subRoutes'], SubRouteInfo.fromJson),
         unpricedSubRoutes: numOf(j['unpricedSubRoutes']).toInt(),
+        pendingFareChanges: numOf(j['pendingFareChanges']).toInt(),
         taxis: listOf(j['taxis'], AssignedTaxi.fromJson),
       );
 }
