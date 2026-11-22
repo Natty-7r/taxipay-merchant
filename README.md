@@ -71,11 +71,9 @@ flutter test
 Push needs a Firebase project:
 
 1. Firebase console → add an Android app with package `com.taxipay.taxipay_merchant` (the `applicationId` in `android/app/build.gradle.kts`).
-2. Build the app with its values:
-   ```bash
-   flutter run --dart-define=FIREBASE_API_KEY=... --dart-define=FIREBASE_APP_ID=... \
-     --dart-define=FIREBASE_SENDER_ID=... --dart-define=FIREBASE_PROJECT_ID=...
-   ```
+2. Download that app's `google-services.json` into `android/app/` (git-ignored), then build with
+   `tool/build_apk.sh http://192.168.1.7:8080` — it reads the Firebase values from the file.
+   (By hand: `--dart-define=FIREBASE_API_KEY / FIREBASE_APP_ID / FIREBASE_SENDER_ID / FIREBASE_PROJECT_ID`.)
 3. Give the API a service-account key: Project settings → Service accounts → Generate new private
    key, then `FCM_SERVICE_ACCOUNT_FILE=/path/key.json` in the API's `.env`.
 
