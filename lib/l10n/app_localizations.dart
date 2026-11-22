@@ -1285,6 +1285,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open'**
   String get open;
+
+  /// No description provided for @firstTripDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'First trip goes'**
+  String get firstTripDirection;
+
+  /// No description provided for @allowStanding.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow passengers without a seat'**
+  String get allowStanding;
+
+  /// No description provided for @allowStandingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: every passenger must pick a seat to pay. You can change this during the trip.'**
+  String get allowStandingHint;
+
+  /// No description provided for @freeSeatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat {seat}'**
+  String freeSeatTitle(String seat);
+
+  /// No description provided for @freeSeatPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid · {from} → {to}'**
+  String freeSeatPaid(String from, String to);
+
+  /// No description provided for @freeSeatQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Did this passenger get off? Freeing the seat lets someone else pay for it.'**
+  String get freeSeatQuestion;
+
+  /// No description provided for @freeSeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Free the seat'**
+  String get freeSeat;
+
+  /// No description provided for @paidOnTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid on this trip ({count})'**
+  String paidOnTrip(int count);
+
+  /// No description provided for @noPaymentsOnTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments on this trip yet.'**
+  String get noPaymentsOnTrip;
+
+  /// No description provided for @onBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'On board'**
+  String get onBoard;
+
+  /// No description provided for @gotOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Got off'**
+  String get gotOff;
+
+  /// No description provided for @refunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get refunded;
+
+  /// No description provided for @shareTaxiQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Share QR'**
+  String get shareTaxiQr;
+
+  /// No description provided for @nextTripDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Next trip goes'**
+  String get nextTripDirection;
+
+  /// No description provided for @notificationsOffTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on notifications'**
+  String get notificationsOffTitle;
+
+  /// No description provided for @notificationsOffBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Get told the moment a passenger pays, even when the app is closed.'**
+  String get notificationsOffBody;
+
+  /// No description provided for @notificationsAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get notificationsAllow;
+
+  /// No description provided for @notificationsSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get notificationsSettings;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// No description provided for @fromStopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'From {stop}'**
+  String fromStopTitle(String stop);
+
+  /// No description provided for @fromStopReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'From {stop} (return)'**
+  String fromStopReturn(String stop);
 }
 
 class _AppLocalizationsDelegate

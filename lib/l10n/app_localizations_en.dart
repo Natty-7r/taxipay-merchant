@@ -638,4 +638,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get open => 'Open';
+
+  @override
+  String get firstTripDirection => 'First trip goes';
+
+  @override
+  String get allowStanding => 'Allow passengers without a seat';
+
+  @override
+  String get allowStandingHint =>
+      'Off: every passenger must pick a seat to pay. You can change this during the trip.';
+
+  @override
+  String freeSeatTitle(String seat) {
+    return 'Seat $seat';
+  }
+
+  @override
+  String freeSeatPaid(String from, String to) {
+    return 'Paid · $from → $to';
+  }
+
+  @override
+  String get freeSeatQuestion =>
+      'Did this passenger get off? Freeing the seat lets someone else pay for it.';
+
+  @override
+  String get freeSeat => 'Free the seat';
+
+  @override
+  String paidOnTrip(int count) {
+    return 'Paid on this trip ($count)';
+  }
+
+  @override
+  String get noPaymentsOnTrip => 'No payments on this trip yet.';
+
+  @override
+  String get onBoard => 'On board';
+
+  @override
+  String get gotOff => 'Got off';
+
+  @override
+  String get refunded => 'Refunded';
+
+  @override
+  String get shareTaxiQr => 'Share QR';
+
+  @override
+  String get nextTripDirection => 'Next trip goes';
+
+  @override
+  String get notificationsOffTitle => 'Turn on notifications';
+
+  @override
+  String get notificationsOffBody =>
+      'Get told the moment a passenger pays, even when the app is closed.';
+
+  @override
+  String get notificationsAllow => 'Allow';
+
+  @override
+  String get notificationsSettings => 'Open settings';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String fromStopTitle(String stop) {
+    return 'From $stop';
+  }
+
+  @override
+  String fromStopReturn(String stop) {
+    return 'From $stop (return)';
+  }
 }

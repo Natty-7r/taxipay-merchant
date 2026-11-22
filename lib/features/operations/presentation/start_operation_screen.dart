@@ -21,12 +21,15 @@ class _StartOperationScreenState extends ConsumerState<StartOperationScreen> {
   Taxi? _taxi;
   RouteInfo? _route;
   int? _driverId;
+  String _direction = 'FORWARD';
+  bool _standing = false;
   bool _busy = false;
 
   Future<void> _start() async {
     setState(() => _busy = true);
     final ok = await runAction(context, () async {
-      final op = await ref.read(operationsApiProvider).start(taxiId: _taxi!.id, routeId: _route!.id, driverId: _driverId);
+      final op = await ref.read(operationsApiProvider).start(
+          taxiId: _taxi!.id, routeId: _route!.id, driverId: _driverId, direction: _direction, standingAllowed: _standing);
       ref.invalidate(activeOperationsProvider);
       if (mounted) context.pushReplacement('/operate/taxi/${op.taxi.id}');
     });
@@ -61,7 +64,35 @@ class _StartOperationScreenState extends ConsumerState<StartOperationScreen> {
           initialValue: _route,
           decoration: InputDecoration(labelText: l10n.route),
           items: [for (final r in routes) DropdownMenuItem(value: r, child: Text(r.name))],
-          onChanged: (r) => setState(() => _route = r),
+          onChanged: (r) => setState(() {
+            _route = r;
+            _direction = 'FORWARD';
+          }),
+        ),
+        if (_route != null && _route!.stops.length >= 2) ...[
+          const SizedBox(height: 16),
+          Text(l10n.firstTripDirection, style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<String>(
+              showSelectedIcon: false,
+              segments: [
+                ButtonSegment(value: 'FORWARD', label: Text('${_route!.stops.first} → ${_route!.stops.last}')),
+                ButtonSegment(value: 'REVERSE', label: Text('${_route!.stops.last} → ${_route!.stops.first}')),
+              ],
+              selected: {_direction},
+              onSelectionChanged: (s) => setState(() => _direction = s.first),
+            ),
+          ),
+        ],
+        const SizedBox(height: 8),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          value: _standing,
+          onChanged: (v) => setState(() => _standing = v),
+          title: Text(l10n.allowStanding),
+          subtitle: Text(l10n.allowStandingHint),
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<int?>(

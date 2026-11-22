@@ -159,15 +159,24 @@ class SubRouteInfo {
       );
 }
 
-/// Legs in display order: outbound legs, return legs, full route.
-enum LegGroup { outbound, inbound, full }
+/// Journeys from one stop: all A → … together, then B → …; return journeys after.
+class LegGroup {
+  LegGroup(this.from, this.forward, this.legs);
+
+  final String from;
+  final bool forward;
+  final List<SubRouteInfo> legs;
+}
 
 extension LegGrouping on List<SubRouteInfo> {
-  Map<LegGroup, List<SubRouteInfo>> grouped() => {
-        LegGroup.outbound: where((s) => !s.fullRoute && s.forward).toList(),
-        LegGroup.inbound: where((s) => !s.fullRoute && !s.forward).toList(),
-        LegGroup.full: where((s) => s.fullRoute).toList(),
-      }..removeWhere((_, v) => v.isEmpty);
+  /// Grouped by starting stop, outbound first, in the order the API lists them (by stop order).
+  List<LegGroup> grouped() {
+    final groups = <String, LegGroup>{};
+    for (final s in [...where((s) => s.forward), ...where((s) => !s.forward)]) {
+      groups.putIfAbsent('${s.forward}|${s.fromName}', () => LegGroup(s.fromName, s.forward, [])).legs.add(s);
+    }
+    return groups.values.toList();
+  }
 }
 
 class AssignedTaxi {

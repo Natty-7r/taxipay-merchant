@@ -281,5 +281,64 @@
       }
     }
   },
-  "open": "Open"
+  "open": "Open",
+  "firstTripDirection": "First trip goes",
+  "allowStanding": "Allow passengers without a seat",
+  "allowStandingHint": "Off: every passenger must pick a seat to pay. You can change this during the trip.",
+  "freeSeatTitle": "Seat {seat}",
+  "freeSeatPaid": "Paid · {from} → {to}",
+  "freeSeatQuestion": "Did this passenger get off? Freeing the seat lets someone else pay for it.",
+  "freeSeat": "Free the seat",
+  "paidOnTrip": "Paid on this trip ({count})",
+  "noPaymentsOnTrip": "No payments on this trip yet.",
+  "onBoard": "On board",
+  "gotOff": "Got off",
+  "refunded": "Refunded",
+  "shareTaxiQr": "Share QR",
+  "nextTripDirection": "Next trip goes",
+  "notificationsOffTitle": "Turn on notifications",
+  "notificationsOffBody": "Get told the moment a passenger pays, even when the app is closed.",
+  "notificationsAllow": "Allow",
+  "notificationsSettings": "Open settings",
+  "notNow": "Not now",
+  "fromStopTitle": "From {stop}",
+  "fromStopReturn": "From {stop} (return)",
+  "@freeSeatTitle": {
+    "placeholders": {
+      "seat": {
+        "type": "String"
+      }
+    }
+  },
+  "@freeSeatPaid": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "@paidOnTrip": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@fromStopTitle": {
+    "placeholders": {
+      "stop": {
+        "type": "String"
+      }
+    }
+  },
+  "@fromStopReturn": {
+    "placeholders": {
+      "stop": {
+        "type": "String"
+      }
+    }
+  }
 }

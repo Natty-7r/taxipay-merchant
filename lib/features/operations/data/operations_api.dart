@@ -14,14 +14,27 @@ class OperationsApi {
           query: {'status': 'ACTIVE', 'size': 100, 'sortBy': 'startedAt'}))
       .content;
 
-  Future<Operation> start({required int taxiId, required int routeId, int? driverId}) =>
+  /// [direction] FORWARD = first stop → last, REVERSE = last → first.
+  Future<Operation> start({required int taxiId, required int routeId, int? driverId, String direction = 'FORWARD',
+          bool standingAllowed = false}) =>
       _api.post('/api/merchant/operations',
-          body: {'taxiId': taxiId, 'routeId': routeId, 'driverId': driverId}..removeWhere((_, v) => v == null),
+          body: {
+            'taxiId': taxiId,
+            'routeId': routeId,
+            'driverId': driverId,
+            'firstDirection': direction,
+            'standingAllowed': standingAllowed,
+          }..removeWhere((_, v) => v == null),
           map: (d) => Operation.fromJson(d as Json));
+
+  /// Allow / stop passengers paying without a seat — any time during the run.
+  Future<void> setStanding(int operationId, bool allowed) =>
+      _api.put('/api/merchant/operations/$operationId/standing', body: {'allowed': allowed}, map: (_) {});
 
   Future<void> finish(int operationId) => _api.post('/api/merchant/operations/$operationId/finish', map: (_) {});
 
-  Future<void> openTrip(int operationId) => _api.post('/api/merchant/operations/$operationId/trips', map: (_) {});
+  Future<void> openTrip(int operationId, {String? direction}) => _api.post('/api/merchant/operations/$operationId/trips',
+      body: direction == null ? null : {'direction': direction}, map: (_) {});
 
   Future<void> depart(int tripId) => _api.post('/api/merchant/trips/$tripId/depart', map: (_) {});
 

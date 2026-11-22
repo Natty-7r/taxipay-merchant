@@ -139,11 +139,8 @@ class _Notice extends StatelessWidget {
       );
 }
 
-String _groupTitle(BuildContext context, LegGroup g) => switch (g) {
-      LegGroup.outbound => context.l10n.outboundLegs,
-      LegGroup.inbound => context.l10n.returnLegs,
-      LegGroup.full => context.l10n.fullRoute,
-    };
+String _groupTitle(BuildContext context, LegGroup g) =>
+    g.forward ? context.l10n.fromStopTitle(g.from) : context.l10n.fromStopReturn(g.from);
 
 /// Every leg with the price passengers pay now and, if any, my price waiting for approval.
 class LegPriceList extends StatelessWidget {
@@ -156,13 +153,13 @@ class LegPriceList extends StatelessWidget {
     final l10n = context.l10n;
     final text = Theme.of(context).textTheme;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      for (final entry in route.subRoutes.grouped().entries) ...[
+      for (final group in route.subRoutes.grouped()) ...[
         Padding(
           padding: const EdgeInsets.only(top: 12, bottom: 2),
-          child: Text(_groupTitle(context, entry.key).toUpperCase(),
+          child: Text(_groupTitle(context, group).toUpperCase(),
               style: text.labelSmall?.copyWith(letterSpacing: 0.8, color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ),
-        for (final s in entry.value)
+        for (final s in group.legs)
           ListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
@@ -271,12 +268,12 @@ class _RoutePricesScreenState extends ConsumerState<RoutePricesScreen> {
             Text(r.name, style: text.titleMedium),
             const SizedBox(height: 4),
             Text(r.live ? l10n.priceChangeInfo : l10n.legsInfo, style: text.bodySmall),
-            for (final entry in r.subRoutes.grouped().entries) ...[
+            for (final group in r.subRoutes.grouped()) ...[
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 8),
-                child: Text(_groupTitle(context, entry.key), style: text.titleSmall),
+                child: Text(_groupTitle(context, group), style: text.titleSmall),
               ),
-              for (final s in entry.value)
+              for (final s in group.legs)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Row(children: [

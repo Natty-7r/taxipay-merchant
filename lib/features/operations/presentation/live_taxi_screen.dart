@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import '../../fleet/presentation/fleet_providers.dart';
+import '../../../core/widgets/ui.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
@@ -59,6 +61,11 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(live.value?.plateNumber ?? l10n.taxi), actions: [
         IconButton(
+          tooltip: l10n.shareTaxiQr,
+          icon: const Icon(AppIcons.qrCode2),
+          onPressed: () => context.push('/fleet/taxis/${widget.taxiId}/qr'),
+        ),
+        IconButton(
           tooltip: l10n.viewTaxi,
           icon: const Icon(AppIcons.infoOutline),
           onPressed: () => context.push('/fleet/taxis/${widget.taxiId}'),
@@ -97,7 +104,14 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
                         '${trip.passengers} ${l10n.passengers} · ${money(trip.revenue)}'),
                   ),
                 ),
-              const SizedBox(height: 16),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                value: op.standingAllowed,
+                onChanged: _busy ? null : (v) => _act(() => api.setStanding(op.id, v)),
+                title: Text(l10n.allowStanding),
+                subtitle: Text(l10n.allowStandingHint, style: Theme.of(context).textTheme.bodySmall),
+              ),
+              const SizedBox(height: 8),
               _Legend(available: t.available, unpaid: t.occupiedUnpaid, paid: t.occupiedPaid),
               const SizedBox(height: 12),
               SeatGrid(
@@ -115,7 +129,10 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
                     caption: seat.destination,
                     onTap: trip == null || _busy
                         ? null
-                        : () => _act(() => api.setSeat(trip.id, code, seat.status == SeatStatus.available)),
+                        : seat.status == SeatStatus.occupiedPaid
+                            // A paid seat is freed only on purpose: that passenger got off.
+                            ? () => _confirmFree(context, trip.id, seat)
+                            : () => _act(() => api.setSeat(trip.id, code, seat.status == SeatStatus.available)),
                   );
                 },
               ),
@@ -132,7 +149,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
                     child: Text(l10n.completeTrip)),
               ],
               if (trip == null)
-                FilledButton.icon(onPressed: _busy ? null : () => _act(() => api.openTrip(op.id)),
+                FilledButton.icon(onPressed: _busy ? null : () => _openTrip(context, op),
                     icon: const Icon(AppIcons.add), label: Text(l10n.openNextTrip)),
               const SizedBox(height: 8),
               if (trip == null || trip.boarding)
@@ -146,10 +163,129 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
                   icon: const Icon(AppIcons.stop),
                   label: Text(l10n.finishOperation),
                 ),
+              if (trip != null) ...[
+                SectionLabel(l10n.paidOnTrip(t.payments.length)),
+                if (t.payments.isEmpty)
+                  SoftCard(child: Text(l10n.noPaymentsOnTrip))
+                else
+                  ListCard(children: [for (final p in t.payments) _PaymentTile(p)]),
+              ],
             ],
           ]);
         },
       ),
+    );
+  }
+}
+
+extension on _LiveTaxiScreenState {
+  /// "Did this passenger get off?" before freeing a paid seat.
+  Future<void> _confirmFree(BuildContext context, int tripId, SeatState seat) async {
+    final l10n = context.l10n;
+    final yes = await showModalBottomSheet<bool>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Text(l10n.freeSeatTitle(seat.code), style: Theme.of(context).textTheme.titleLarge),
+            if (seat.destination != null) ...[
+              const SizedBox(height: 4),
+              Text('${l10n.seatsPaid} · → ${seat.destination}', style: const TextStyle(fontWeight: FontWeight.w600)),
+            ],
+            const SizedBox(height: 12),
+            Text(l10n.freeSeatQuestion),
+            const SizedBox(height: 20),
+            FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(l10n.freeSeat)),
+            const SizedBox(height: 8),
+            OutlinedButton(onPressed: () => Navigator.pop(context, false), child: Text(l10n.cancel)),
+          ]),
+        ),
+      ),
+    );
+    if (yes == true) await _act(() => ref.read(operationsApiProvider).setSeat(tripId, seat.code, false));
+  }
+
+  /// Open the next trip in the direction the merchant chooses.
+  Future<void> _openTrip(BuildContext context, Operation op) async {
+    final l10n = context.l10n;
+    final stops = (await ref.read(routeProvider(op.route.id).future)).stops;
+    if (!context.mounted || stops.length < 2) return;
+    final direction = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Text(l10n.nextTripDirection, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 16),
+            FilledButton(onPressed: () => Navigator.pop(context, 'FORWARD'), child: Text('${stops.first} → ${stops.last}')),
+            const SizedBox(height: 8),
+            FilledButton(onPressed: () => Navigator.pop(context, 'REVERSE'), child: Text('${stops.last} → ${stops.first}')),
+          ]),
+        ),
+      ),
+    );
+    if (direction != null) await _act(() => ref.read(operationsApiProvider).openTrip(op.id, direction: direction));
+  }
+}
+
+/// A payment on the trip: amount, payer, time, and each passenger (seat, from → to, on board / got off).
+class _PaymentTile extends StatelessWidget {
+  const _PaymentTile(this.p);
+
+  final TripPayment p;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('${money(p.amount)} · ${p.passengers}×', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+              Text(
+                [p.payerPhone, p.provider == null ? null : humanize(p.provider), shortTime(p.paidAt)].whereType<String>().join(' · '),
+                style: TextStyle(color: muted, fontSize: 12.5),
+              ),
+            ]),
+          ),
+          Text(p.reference, style: TextStyle(color: muted, fontSize: 11, fontFamily: 'monospace')),
+        ]),
+        const SizedBox(height: 8),
+        for (final tk in p.tickets)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(children: [
+              Container(
+                width: 36,
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: tk.seatCode == null ? Colors.transparent : AppTheme.lightYellow,
+                  border: Border.all(color: AppTheme.cardBorder),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(tk.seatCode ?? '—', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: AppTheme.navy)),
+              ),
+              const SizedBox(width: 10),
+              Expanded(child: Text('${tk.origin} → ${tk.destination}', maxLines: 1, overflow: TextOverflow.ellipsis)),
+              Text(money(tk.fare), style: const TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(width: 8),
+              Text(
+                tk.status == 'REFUNDED' ? l10n.refunded : (tk.onBoard || tk.seatCode == null ? l10n.onBoard : l10n.gotOff),
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  color: tk.status == 'REFUNDED' ? AppTheme.error : (tk.onBoard || tk.seatCode == null ? AppTheme.success : muted),
+                ),
+              ),
+            ]),
+          ),
+      ]),
     );
   }
 }

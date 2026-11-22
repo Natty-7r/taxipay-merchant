@@ -35,12 +35,11 @@ void main() {
     'taxis': [],
   });
 
-  test('legs are grouped outbound, return, then the full route', () {
+  test('journeys are grouped by starting stop, outbound first', () {
     final groups = route.subRoutes.grouped();
-    expect(groups.keys, [LegGroup.outbound, LegGroup.inbound, LegGroup.full]);
-    expect(groups[LegGroup.outbound]!.map((s) => s.id), [1, 2]);
-    expect(groups[LegGroup.inbound]!.map((s) => s.id), [3, 4]);
-    expect(groups[LegGroup.full]!.map((s) => s.id), [5, 6]);
+    expect([for (final g in groups) '${g.forward ? '' : '<'}${g.from}'], ['Addis Ababa', 'Bishoftu', '<Adama', '<Bishoftu']);
+    expect(groups.first.legs.map((s) => s.id), [1, 5]); // Addis → Bishoftu, Addis → Adama
+    expect(groups[2].legs.map((s) => s.id), [3, 6]); // Adama → Bishoftu, Adama → Addis
   });
 
   test('a pending change is the latest price but not what passengers pay yet', () {

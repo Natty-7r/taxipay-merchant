@@ -41,7 +41,11 @@ class Trip {
 
 class Operation {
   Operation({required this.id, required this.taxi, required this.route, required this.driver, required this.status,
-      this.startedAt, this.currentTrip, required this.completedTrips, required this.passengers, required this.revenue});
+      this.startedAt, this.currentTrip, required this.completedTrips, required this.passengers, required this.revenue,
+      this.standingAllowed = false});
+
+  /// Passengers may pay without a seat on this run.
+  final bool standingAllowed;
 
   final int id;
   final Ref taxi;
@@ -68,8 +72,58 @@ class Operation {
       completedTrips: numOf(totals['completedTrips']).toInt(),
       passengers: numOf(totals['passengers']).toInt(),
       revenue: numOf(totals['revenue']),
+      standingAllowed: (j['standingAllowed'] as bool?) ?? false,
     );
   }
+}
+
+/// One payment on a trip: who paid (masked), how, and each passenger it covers.
+class TripPayment {
+  TripPayment({required this.reference, this.provider, this.payerPhone, required this.amount, required this.status,
+      required this.passengers, this.paidAt, required this.tickets});
+
+  final String reference;
+  final String? provider;
+  final String? payerPhone;
+  final num amount;
+  final String status;
+  final int passengers;
+  final String? paidAt;
+  final List<TripTicket> tickets;
+
+  factory TripPayment.fromJson(Json j) => TripPayment(
+        reference: j['reference'] as String,
+        provider: j['provider'] as String?,
+        payerPhone: j['payerPhone'] as String?,
+        amount: numOf(j['amount']),
+        status: j['status'] as String? ?? 'SUCCESSFUL',
+        passengers: numOf(j['passengers']).toInt(),
+        paidAt: j['paidAt'] as String?,
+        tickets: listOf(j['tickets'], TripTicket.fromJson),
+      );
+}
+
+class TripTicket {
+  TripTicket({required this.origin, required this.destination, this.seatCode, required this.fare, required this.status,
+      required this.onBoard});
+
+  final String origin;
+  final String destination;
+  final String? seatCode;
+  final num fare;
+  final String status;
+
+  /// Still holding the seat; false once freed (got off).
+  final bool onBoard;
+
+  factory TripTicket.fromJson(Json j) => TripTicket(
+        origin: j['origin'] as String,
+        destination: j['destination'] as String,
+        seatCode: j['seatCode'] as String?,
+        fare: numOf(j['fare']),
+        status: j['status'] as String? ?? 'PAID',
+        onBoard: (j['onBoard'] as bool?) ?? false,
+      );
 }
 
 enum SeatStatus { available, occupiedUnpaid, occupiedPaid }
@@ -103,7 +157,11 @@ class SeatState {
 /// `GET /api/merchant/taxis/{id}/live` — what the taxi is doing now.
 class LiveTaxi {
   LiveTaxi({required this.taxiId, required this.plateNumber, required this.capacity, this.operation, this.currentTrip,
-      required this.seats, required this.available, required this.occupiedUnpaid, required this.occupiedPaid});
+      required this.seats, required this.available, required this.occupiedUnpaid, required this.occupiedPaid,
+      this.payments = const []});
+
+  /// Payments on the current trip, newest first.
+  final List<TripPayment> payments;
 
   final int taxiId;
   final String plateNumber;
@@ -139,6 +197,7 @@ class LiveTaxi {
       available: numOf(j['available']).toInt(),
       occupiedUnpaid: numOf(j['occupiedUnpaid']).toInt(),
       occupiedPaid: numOf(j['occupiedPaid']).toInt(),
+      payments: listOf(j['payments'], TripPayment.fromJson),
     );
   }
 }

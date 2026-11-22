@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import '../logging/app_logger.dart';
 import '../providers.dart';
 import 'live_refresh.dart';
+import '../push/notification_permission.dart';
 
 /// Something that just happened for this merchant (a payment, a review…), from `GET /api/events`.
 class LiveEvent {
@@ -145,7 +146,10 @@ class _LiveEventsLifecycleState extends ConsumerState<LiveEventsLifecycle> with 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => ref.read(liveEventsProvider.notifier).start());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(liveEventsProvider.notifier).start();
+      if (mounted) ensureNotificationPermission(context);
+    });
   }
 
   @override

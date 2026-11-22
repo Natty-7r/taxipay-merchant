@@ -631,4 +631,79 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get open => 'ክፈት';
+
+  @override
+  String get firstTripDirection => 'የመጀመሪያው ጉዞ አቅጣጫ';
+
+  @override
+  String get allowStanding => 'ያለ መቀመጫ ተሳፋሪ ፍቀድ';
+
+  @override
+  String get allowStandingHint =>
+      'ጠፍቶ ከሆነ፦ ለመክፈል እያንዳንዱ ተሳፋሪ መቀመጫ መምረጥ አለበት። በጉዞ መካከልም መቀየር ይችላሉ።';
+
+  @override
+  String freeSeatTitle(String seat) {
+    return 'መቀመጫ $seat';
+  }
+
+  @override
+  String freeSeatPaid(String from, String to) {
+    return 'ተከፍሏል · $from → $to';
+  }
+
+  @override
+  String get freeSeatQuestion =>
+      'ይህ ተሳፋሪ ወርዷል? መቀመጫውን ነጻ ማድረግ ሌላ ሰው እንዲከፍልበት ያስችላል።';
+
+  @override
+  String get freeSeat => 'መቀመጫውን ነጻ አድርግ';
+
+  @override
+  String paidOnTrip(int count) {
+    return 'በዚህ ጉዞ የተከፈሉ ($count)';
+  }
+
+  @override
+  String get noPaymentsOnTrip => 'በዚህ ጉዞ እስካሁን ክፍያ የለም።';
+
+  @override
+  String get onBoard => 'ተሳፍሯል';
+
+  @override
+  String get gotOff => 'ወርዷል';
+
+  @override
+  String get refunded => 'ተመልሷል';
+
+  @override
+  String get shareTaxiQr => 'QR አጋራ';
+
+  @override
+  String get nextTripDirection => 'የሚቀጥለው ጉዞ አቅጣጫ';
+
+  @override
+  String get notificationsOffTitle => 'ማሳወቂያዎችን ያብሩ';
+
+  @override
+  String get notificationsOffBody => 'አፑ ዝግ ቢሆንም ተሳፋሪ እንደከፈለ ወዲያውኑ ይወቁ።';
+
+  @override
+  String get notificationsAllow => 'ፍቀድ';
+
+  @override
+  String get notificationsSettings => 'ቅንብሮችን ክፈት';
+
+  @override
+  String get notNow => 'አሁን አይደለም';
+
+  @override
+  String fromStopTitle(String stop) {
+    return 'ከ$stop';
+  }
+
+  @override
+  String fromStopReturn(String stop) {
+    return 'ከ$stop (መመለሻ)';
+  }
 }
