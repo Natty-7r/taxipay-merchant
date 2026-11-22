@@ -65,7 +65,8 @@ class ApiClient {
   Future<Uint8List> bytes(String path, {Map<String, dynamic>? query}) async {
     try {
       final res = await _dio.get<List<int>>(path, queryParameters: query,
-          options: Options(responseType: ResponseType.bytes));
+          // The client default is Accept: application/json; files are images / PDFs.
+          options: Options(responseType: ResponseType.bytes, headers: {'Accept': '*/*'}));
       return Uint8List.fromList(res.data ?? const []);
     } on DioException catch (e) {
       throw ApiException.fromDio(e);

@@ -26,6 +26,14 @@ void main() {
     expect(adapter.requests.single.headers['X-Request-Id'], matches(RegExp(r'^[0-9a-f]{16}$')));
   });
 
+  test('file downloads accept any content type (the QR endpoint returns image/png)', () async {
+    final adapter = FakeAdapter((_) => (200, 'png'));
+    await client(adapter).bytes('/api/merchant/taxis/1/qr', query: {'size': 1000});
+
+    expect(adapter.requests.single.headers['Accept'], '*/*');
+    expect(adapter.requests.single.headers['Authorization'], 'Bearer old-access');
+  });
+
   test('maps the error envelope to ApiException with details and trace id', () async {
     final adapter = FakeAdapter((_) => (400, apiError('VALIDATION_FAILED', 'Request validation failed', details: ['tin: must be 10 digits'])));
     final call = client(adapter).post('/api/merchant/taxis', body: {}, map: (d) => d);
