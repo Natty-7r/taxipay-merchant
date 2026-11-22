@@ -40,9 +40,16 @@ class TaxiDetailScreen extends ConsumerWidget {
           if (t.color != null) _info(l10n.color, t.color!),
           _info(l10n.defaultDriver, t.defaultDriverName ?? l10n.none),
           const Divider(height: 32),
-          Text('${l10n.seatLayout} · ${t.capacity} ${l10n.seats}', style: Theme.of(context).textTheme.titleMedium),
+          Row(children: [
+            Expanded(child: Text('${l10n.seatLayout} · ${t.capacity} ${l10n.seats}', style: Theme.of(context).textTheme.titleMedium)),
+            TextButton.icon(
+              onPressed: () => context.push('/fleet/taxis/$taxiId/seats'),
+              icon: const Icon(AppIcons.pencil, size: 16),
+              label: Text(l10n.editSeats),
+            ),
+          ]),
           const SizedBox(height: 12),
-          SeatGrid(rows: t.seatRows, seatBuilder: (code) => SeatBox(code)),
+          SeatGrid(rows: t.seatRows, sideSeats: t.sideSeats, seatBuilder: (code) => SeatBox(code)),
           const Divider(height: 32),
           Text(l10n.routes, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),

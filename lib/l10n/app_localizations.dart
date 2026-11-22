@@ -1195,6 +1195,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Side no. {number}'**
   String sideNumberValue(String number);
+
+  /// No description provided for @customLayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customLayout;
+
+  /// No description provided for @rowLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Row {letter}'**
+  String rowLabel(String letter);
+
+  /// No description provided for @addRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Add row'**
+  String get addRow;
+
+  /// No description provided for @sideSeatsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Side seats'**
+  String get sideSeatsLabel;
+
+  /// No description provided for @sideSeatsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra seats along the side, e.g. by the door'**
+  String get sideSeatsHint;
+
+  /// No description provided for @seatCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} seats'**
+  String seatCount(int count);
+
+  /// No description provided for @editSeats.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit seats'**
+  String get editSeats;
+
+  /// No description provided for @seatsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat layout saved'**
+  String get seatsSaved;
+
+  /// No description provided for @chooseLayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a layout or build your own'**
+  String get chooseLayout;
+
+  /// No description provided for @vehicleOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get vehicleOther;
 }
 
 class _AppLocalizationsDelegate

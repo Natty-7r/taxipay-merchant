@@ -23,6 +23,10 @@ class FleetApi {
       _api.get('/api/merchant/seat-templates', map: (d) => listOf(d, SeatTemplate.fromJson));
 
   /// PNG of the taxi's QR code, ready to print.
+  /// Replace a taxi's seats (template and/or explicit rows, plus side seats).
+  Future<Taxi> setSeatLayout(int taxiId, Json layout) =>
+      _api.put('/api/merchant/taxis/$taxiId/seat-layout', body: layout, map: (d) => Taxi.fromJson(d as Json));
+
   /// The text to encode in the taxi's QR code (approved taxis only); the app draws the image.
   Future<TaxiQr> qr(int taxiId) => _api.get('/api/merchant/taxis/$taxiId/qr', map: (d) => TaxiQr.fromJson(d as Json));
 

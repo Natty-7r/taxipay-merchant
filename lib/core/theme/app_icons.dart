@@ -65,6 +65,9 @@ abstract final class AppIcons {
   static const IconData warningAmberRounded = LucideIcons.triangleAlert;
   static const IconData wifiOff = LucideIcons.wifiOff;
   static const IconData share = LucideIcons.share2;
+  static const IconData pencil = LucideIcons.pencil;
+  static const IconData minus = LucideIcons.minus;
+  static const IconData trash = LucideIcons.trash2;
   static const IconData rotateCw = LucideIcons.rotateCw;
   static const IconData serverCrash = LucideIcons.serverCrash;
   static const IconData shieldAlert = LucideIcons.shieldAlert;

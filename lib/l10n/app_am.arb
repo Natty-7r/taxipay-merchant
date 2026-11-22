@@ -182,5 +182,15 @@
   "saveToPhone": "አስቀምጥ",
   "savedFile": "ተቀምጧል",
   "makePoster": "ለማተም ፖስተር ያዘጋጁ",
-  "sideNumberValue": "የጎን ቁጥር {number}"
+  "sideNumberValue": "የጎን ቁጥር {number}",
+  "customLayout": "የራስ",
+  "rowLabel": "ረድፍ {letter}",
+  "addRow": "ረድፍ ጨምር",
+  "sideSeatsLabel": "የጎን መቀመጫዎች",
+  "sideSeatsHint": "በጎን በኩል ያሉ ተጨማሪ መቀመጫዎች፣ ለምሳሌ በበሩ አጠገብ",
+  "seatCount": "{count} መቀመጫዎች",
+  "editSeats": "መቀመጫዎችን አስተካክል",
+  "seatsSaved": "የመቀመጫ አቀማመጥ ተቀምጧል",
+  "chooseLayout": "አቀማመጥ ይምረጡ ወይም የራስዎን ይስሩ",
+  "vehicleOther": "ሌላ"
 }

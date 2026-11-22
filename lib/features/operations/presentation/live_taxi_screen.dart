@@ -102,6 +102,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
               const SizedBox(height: 12),
               SeatGrid(
                 rows: [for (final row in t.rows) [for (final s in row) s.code]],
+                sideSeats: [for (final s in t.sideSeats) s.code],
                 seatBuilder: (code) {
                   final seat = t.seats.firstWhere((s) => s.code == code);
                   return SeatBox(

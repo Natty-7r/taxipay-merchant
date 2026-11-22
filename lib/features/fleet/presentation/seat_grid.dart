@@ -1,15 +1,35 @@
 import 'package:material_ui/material_ui.dart';
 import '../../../core/theme/app_icons.dart';
 
-/// Draws a seat layout front to back; [seatBuilder] renders each seat.
+/// Draws a seat layout front to back; [seatBuilder] renders each seat. [sideSeats] are drawn
+/// as a column along the right-hand side.
 class SeatGrid extends StatelessWidget {
-  const SeatGrid({super.key, required this.rows, required this.seatBuilder});
+  const SeatGrid({super.key, required this.rows, required this.seatBuilder, this.sideSeats = const []});
 
   final List<List<String>> rows;
+  final List<String> sideSeats;
   final Widget Function(String code) seatBuilder;
 
   @override
   Widget build(BuildContext context) {
+    final grid = _rows(context);
+    if (sideSeats.isEmpty) return grid;
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+      Flexible(child: grid),
+      const SizedBox(width: 10),
+      Container(
+        padding: const EdgeInsets.fromLTRB(6, 28, 6, 6),
+        decoration: BoxDecoration(
+          border: Border(left: BorderSide(color: Theme.of(context).colorScheme.outline, width: 2)),
+        ),
+        child: Column(children: [
+          for (final code in sideSeats) Padding(padding: const EdgeInsets.only(bottom: 8), child: seatBuilder(code)),
+        ]),
+      ),
+    ]);
+  }
+
+  Widget _rows(BuildContext context) {
     return Column(children: [
       Row(children: [
         Icon(AppIcons.airlineSeatReclineNormal, color: Theme.of(context).colorScheme.outline),

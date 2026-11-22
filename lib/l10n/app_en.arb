@@ -245,5 +245,29 @@
         "type": "String"
       }
     }
-  }
+  },
+  "customLayout": "Custom",
+  "rowLabel": "Row {letter}",
+  "@rowLabel": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "addRow": "Add row",
+  "sideSeatsLabel": "Side seats",
+  "sideSeatsHint": "Extra seats along the side, e.g. by the door",
+  "seatCount": "{count} seats",
+  "@seatCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editSeats": "Edit seats",
+  "seatsSaved": "Seat layout saved",
+  "chooseLayout": "Choose a layout or build your own",
+  "vehicleOther": "Other"
 }

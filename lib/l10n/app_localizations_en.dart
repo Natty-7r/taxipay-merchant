@@ -586,4 +586,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String sideNumberValue(String number) {
     return 'Side no. $number';
   }
+
+  @override
+  String get customLayout => 'Custom';
+
+  @override
+  String rowLabel(String letter) {
+    return 'Row $letter';
+  }
+
+  @override
+  String get addRow => 'Add row';
+
+  @override
+  String get sideSeatsLabel => 'Side seats';
+
+  @override
+  String get sideSeatsHint => 'Extra seats along the side, e.g. by the door';
+
+  @override
+  String seatCount(int count) {
+    return '$count seats';
+  }
+
+  @override
+  String get editSeats => 'Edit seats';
+
+  @override
+  String get seatsSaved => 'Seat layout saved';
+
+  @override
+  String get chooseLayout => 'Choose a layout or build your own';
+
+  @override
+  String get vehicleOther => 'Other';
 }

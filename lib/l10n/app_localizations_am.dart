@@ -579,4 +579,38 @@ class AppLocalizationsAm extends AppLocalizations {
   String sideNumberValue(String number) {
     return 'የጎን ቁጥር $number';
   }
+
+  @override
+  String get customLayout => 'የራስ';
+
+  @override
+  String rowLabel(String letter) {
+    return 'ረድፍ $letter';
+  }
+
+  @override
+  String get addRow => 'ረድፍ ጨምር';
+
+  @override
+  String get sideSeatsLabel => 'የጎን መቀመጫዎች';
+
+  @override
+  String get sideSeatsHint => 'በጎን በኩል ያሉ ተጨማሪ መቀመጫዎች፣ ለምሳሌ በበሩ አጠገብ';
+
+  @override
+  String seatCount(int count) {
+    return '$count መቀመጫዎች';
+  }
+
+  @override
+  String get editSeats => 'መቀመጫዎችን አስተካክል';
+
+  @override
+  String get seatsSaved => 'የመቀመጫ አቀማመጥ ተቀምጧል';
+
+  @override
+  String get chooseLayout => 'አቀማመጥ ይምረጡ ወይም የራስዎን ይስሩ';
+
+  @override
+  String get vehicleOther => 'ሌላ';
 }

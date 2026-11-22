@@ -9,6 +9,7 @@ import '../../features/auth/presentation/session_controller.dart';
 import '../../features/auth/presentation/splash_screen.dart';
 import '../../features/fleet/presentation/add_driver_screen.dart';
 import '../../features/fleet/presentation/add_taxi_screen.dart';
+import '../../features/fleet/presentation/edit_seats_screen.dart';
 import '../../features/fleet/presentation/fleet_screen.dart';
 import '../../features/fleet/presentation/qr_poster_screen.dart';
 import '../../features/fleet/presentation/route_screens.dart';
@@ -70,6 +71,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (_, s) => TaxiDetailScreen(taxiId: int.parse(s.pathParameters['id']!)),
                 routes: [
                   GoRoute(path: 'qr', builder: (_, s) => QrPosterScreen(taxiId: int.parse(s.pathParameters['id']!))),
+                  GoRoute(path: 'seats', builder: (_, s) => EditSeatsScreen(taxiId: int.parse(s.pathParameters['id']!))),
                 ],
               ),
               GoRoute(path: 'drivers/new', builder: (_, _) => const AddDriverScreen()),

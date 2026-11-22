@@ -12,6 +12,7 @@ class Taxi {
     this.color,
     required this.hasImage,
     required this.seatRows,
+    this.sideSeats = const [],
     required this.capacity,
     this.seatTemplate,
     this.defaultDriverId,
@@ -33,6 +34,7 @@ class Taxi {
   final String? color;
   final bool hasImage;
   final List<List<String>> seatRows;
+  final List<String> sideSeats;
   final int capacity;
   final String? seatTemplate;
   final int? defaultDriverId;
@@ -62,6 +64,7 @@ class Taxi {
           .map((r) => (r as List).map((c) => c as String).toList())
           .toList(),
       capacity: numOf(layout['capacity']).toInt(),
+      sideSeats: ((layout['sideSeats'] as List?) ?? const []).map((c) => c as String).toList(),
       seatTemplate: layout['template'] as String?,
       defaultDriverId: (driver?['id'] as num?)?.toInt(),
       defaultDriverName: driver?['fullName'] as String?,
@@ -243,3 +246,6 @@ class TaxiQr {
         value: j['value'] as String,
       );
 }
+
+/// Vehicle types the API accepts; OTHER for anything that doesn't fit.
+const vehicleTypes = ['MINIBUS', 'MIDIBUS', 'BUS', 'SEDAN', 'OTHER'];

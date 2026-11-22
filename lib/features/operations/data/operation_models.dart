@@ -75,11 +75,14 @@ class Operation {
 enum SeatStatus { available, occupiedUnpaid, occupiedPaid }
 
 class SeatState {
-  SeatState({required this.code, required this.row, required this.position, required this.status, this.destination});
+  SeatState({required this.code, required this.row, required this.position, this.side = false, required this.status, this.destination});
 
   final String code;
   final int row;
   final int position;
+
+  /// Along the side of the vehicle (row 0).
+  final bool side;
   final SeatStatus status;
   final String? destination;
 
@@ -87,6 +90,7 @@ class SeatState {
         code: j['code'] as String,
         row: numOf(j['row']).toInt(),
         position: numOf(j['position']).toInt(),
+        side: (j['side'] as bool?) ?? false,
         status: switch (j['status']) {
           'OCCUPIED_PAID' => SeatStatus.occupiedPaid,
           'OCCUPIED_UNPAID' => SeatStatus.occupiedUnpaid,
@@ -109,10 +113,13 @@ class LiveTaxi {
   final List<SeatState> seats;
   final int available, occupiedUnpaid, occupiedPaid;
 
-  /// Seats grouped by row, front to back.
+  /// Side seats, front to back.
+  List<SeatState> get sideSeats => seats.where((s) => s.side).toList()..sort((a, b) => a.position.compareTo(b.position));
+
+  /// Seats grouped by row, front to back (side seats excluded).
   List<List<SeatState>> get rows {
     final byRow = <int, List<SeatState>>{};
-    for (final s in seats) {
+    for (final s in seats.where((s) => !s.side)) {
       byRow.putIfAbsent(s.row, () => []).add(s);
     }
     final keys = byRow.keys.toList()..sort();
