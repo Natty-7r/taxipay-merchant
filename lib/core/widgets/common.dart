@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/app_theme.dart';
+
 import '../../l10n/app_localizations.dart';
 import '../network/api_exception.dart';
 import '../utils/formatters.dart';
@@ -107,8 +109,8 @@ class StatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final color = switch (status) {
-      'APPROVED' || 'SUCCESSFUL' || 'ACTIVE' || 'COMPLETED' => Colors.green.shade700,
-      'PENDING' || 'NOT_STARTED' || 'INITIATED' || 'IN_PROGRESS' => Colors.orange.shade800,
+      'APPROVED' || 'SUCCESSFUL' || 'ACTIVE' || 'COMPLETED' => AppTheme.success,
+      'PENDING' || 'PROPOSED' || 'NOT_STARTED' || 'INITIATED' || 'IN_PROGRESS' => const Color(0xFFB45309),
       'REJECTED' || 'FAILED' || 'SUSPENDED' || 'CANCELLED' || 'EXPIRED' => scheme.error,
       _ => scheme.outline,
     };
@@ -134,7 +136,12 @@ class StatCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          if (icon != null) Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+          if (icon != null)
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(color: AppTheme.lightYellow, borderRadius: BorderRadius.circular(8)),
+              child: Icon(icon, size: 18, color: AppTheme.navy),
+            ),
           const SizedBox(height: 6),
           Text(value, style: text.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
           Text(label, style: text.bodySmall),

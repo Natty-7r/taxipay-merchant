@@ -9,6 +9,7 @@ import '../../inbox/presentation/inbox_screen.dart';
 import '../../operations/presentation/operations_screen.dart';
 import '../data/merchant_api.dart';
 import '../data/merchant_models.dart';
+import '../../../core/theme/app_theme.dart';
 
 final dashboardProvider = FutureProvider.autoDispose<Dashboard>((ref) => ref.watch(merchantApiProvider).dashboard());
 
@@ -59,7 +60,7 @@ class DashboardScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Card(child: ListTile(
-                leading: const Icon(Icons.hourglass_top, color: Colors.orange),
+                leading: const Icon(Icons.hourglass_top, color: AppTheme.warning),
                 title: Text('${d.pendingTaxis} · ${l10n.pendingTaxis}'),
                 onTap: () => context.go('/fleet'),
               )),

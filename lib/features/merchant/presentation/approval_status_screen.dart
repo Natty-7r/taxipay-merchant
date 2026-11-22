@@ -7,6 +7,7 @@ import '../../../core/widgets/common.dart';
 import '../../auth/presentation/session_controller.dart';
 import '../data/merchant_api.dart';
 import '../data/merchant_models.dart';
+import '../../../core/theme/app_theme.dart';
 
 /// Gate for businesses that aren't approved: status, reason, documents and resubmission.
 class ApprovalStatusScreen extends ConsumerWidget {
@@ -37,9 +38,9 @@ class ApprovalStatusScreen extends ConsumerWidget {
     if (session == null) return const SizedBox.shrink();
     final m = session.merchant;
     final (title, info, icon, color) = switch (m.status) {
-      MerchantStatus.rejected => (l10n.statusRejected, l10n.statusRejectedInfo, Icons.cancel, Colors.red),
-      MerchantStatus.suspended => (l10n.statusSuspended, l10n.statusSuspendedInfo, Icons.block, Colors.red),
-      _ => (l10n.statusPending, l10n.statusPendingInfo, Icons.hourglass_top, Colors.orange),
+      MerchantStatus.rejected => (l10n.statusRejected, l10n.statusRejectedInfo, Icons.cancel, AppTheme.error),
+      MerchantStatus.suspended => (l10n.statusSuspended, l10n.statusSuspendedInfo, Icons.block, AppTheme.error),
+      _ => (l10n.statusPending, l10n.statusPendingInfo, Icons.hourglass_top, AppTheme.warning),
     };
     final canEdit = m.status == MerchantStatus.pending || m.status == MerchantStatus.rejected;
 

@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../core/widgets/common.dart';
 import 'session_controller.dart';
+import '../../../core/theme/app_theme.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -44,10 +45,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Form(
               key: _form,
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Icon(Icons.local_taxi, size: 72, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(height: 8),
-                Text(l10n.appTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineSmall),
-                const SizedBox(height: 32),
+                const Center(child: BrandLogo(size: 168)),
+                const SizedBox(height: 12),
+                Text(l10n.appTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 28),
                 TextFormField(
                   key: const Key('login.identifier'),
                   controller: _identifier,
