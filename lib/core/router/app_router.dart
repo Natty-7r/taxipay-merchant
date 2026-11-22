@@ -18,6 +18,7 @@ import '../../features/merchant/presentation/dashboard_screen.dart';
 import '../../features/operations/presentation/live_taxi_screen.dart';
 import '../../features/operations/presentation/operations_screen.dart';
 import '../../features/operations/presentation/start_operation_screen.dart';
+import '../widgets/app_bottom_bar.dart';
 import '../../features/payments/presentation/payments_screen.dart';
 import '../../features/settings/presentation/more_screen.dart';
 import '../widgets/common.dart';
@@ -96,16 +97,17 @@ class _HomeShell extends StatelessWidget {
     final l10n = context.l10n;
     return Scaffold(
       body: shell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: shell.currentIndex,
-        onDestinationSelected: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
-        destinations: [
-          NavigationDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: l10n.tabHome),
-          NavigationDestination(icon: const Icon(Icons.local_taxi_outlined), selectedIcon: const Icon(Icons.local_taxi), label: l10n.tabOperate),
-          NavigationDestination(icon: const Icon(Icons.garage_outlined), selectedIcon: const Icon(Icons.garage), label: l10n.tabFleet),
-          NavigationDestination(icon: const Icon(Icons.receipt_long_outlined), selectedIcon: const Icon(Icons.receipt_long), label: l10n.tabPayments),
-          NavigationDestination(icon: const Icon(Icons.menu), label: l10n.tabMore),
+      bottomNavigationBar: AppBottomBar(
+        currentIndex: shell.currentIndex,
+        onSelect: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
+        // Display order: Home, Fleet, [Operate], Payments, More — branch indices stay as declared.
+        items: [
+          BottomBarItem(branch: 0, icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: l10n.tabHome),
+          BottomBarItem(branch: 2, icon: Icons.garage_outlined, activeIcon: Icons.garage_rounded, label: l10n.tabFleet),
+          BottomBarItem(branch: 3, icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long, label: l10n.tabPayments),
+          BottomBarItem(branch: 4, icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.tabMore),
         ],
+        center: BottomBarItem(branch: 1, icon: Icons.local_taxi, activeIcon: Icons.local_taxi, label: l10n.tabOperate),
       ),
     );
   }

@@ -162,7 +162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabPayments => 'Payments';
 
   @override
-  String get tabMore => 'More';
+  String get tabMore => 'Profile';
 
   @override
   String get taxis => 'Taxis';
@@ -458,4 +458,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notOnAnyRoute => 'Not assigned to any route yet.';
+
+  @override
+  String hello(String name) {
+    return 'Hello, $name';
+  }
+
+  @override
+  String get totalCollected => 'Total collected';
+
+  @override
+  String fromPassengers(int count) {
+    return 'From $count paying passengers';
+  }
+
+  @override
+  String get yourFleet => 'Your fleet';
+
+  @override
+  String get approvedRoutes => 'Approved routes';
+
+  @override
+  String get recentPayments => 'Recent payments';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String via(String provider) {
+    return 'via $provider';
+  }
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'Auto';
+
+  @override
+  String get noPaymentsYet =>
+      'No payments yet. They appear here as passengers pay.';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get connect => 'Connect';
 }

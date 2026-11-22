@@ -50,7 +50,7 @@
   "tabOperate": "Operate",
   "tabFleet": "Fleet",
   "tabPayments": "Payments",
-  "tabMore": "More",
+  "tabMore": "Profile",
   "taxis": "Taxis",
   "drivers": "Drivers",
   "routes": "Routes",
@@ -165,5 +165,44 @@
   "invalidPrice": "Enter a price above 0",
   "nothingChanged": "No price changed",
   "viewTaxi": "Taxi details",
-  "notOnAnyRoute": "Not assigned to any route yet."
+  "notOnAnyRoute": "Not assigned to any route yet.",
+  "hello": "Hello, {name}",
+  "@hello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "totalCollected": "Total collected",
+  "fromPassengers": "From {count} paying passengers",
+  "@fromPassengers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yourFleet": "Your fleet",
+  "approvedRoutes": "Approved routes",
+  "recentPayments": "Recent payments",
+  "seeAll": "See all",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "via": "via {provider}",
+  "@via": {
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      }
+    }
+  },
+  "appearance": "Appearance",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "Auto",
+  "noPaymentsYet": "No payments yet. They appear here as passengers pay.",
+  "account": "Account",
+  "preferences": "Preferences",
+  "connect": "Connect"
 }

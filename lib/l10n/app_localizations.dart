@@ -401,7 +401,7 @@ abstract class AppLocalizations {
   /// No description provided for @tabMore.
   ///
   /// In en, this message translates to:
-  /// **'More'**
+  /// **'Profile'**
   String get tabMore;
 
   /// No description provided for @taxis.
@@ -967,6 +967,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not assigned to any route yet.'**
   String get notOnAnyRoute;
+
+  /// No description provided for @hello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String hello(String name);
+
+  /// No description provided for @totalCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'Total collected'**
+  String get totalCollected;
+
+  /// No description provided for @fromPassengers.
+  ///
+  /// In en, this message translates to:
+  /// **'From {count} paying passengers'**
+  String fromPassengers(int count);
+
+  /// No description provided for @yourFleet.
+  ///
+  /// In en, this message translates to:
+  /// **'Your fleet'**
+  String get yourFleet;
+
+  /// No description provided for @approvedRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved routes'**
+  String get approvedRoutes;
+
+  /// No description provided for @recentPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent payments'**
+  String get recentPayments;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @via.
+  ///
+  /// In en, this message translates to:
+  /// **'via {provider}'**
+  String via(String provider);
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get themeSystem;
+
+  /// No description provided for @noPaymentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No payments yet. They appear here as passengers pay.'**
+  String get noPaymentsYet;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @connect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connect;
 }
 
 class _AppLocalizationsDelegate

@@ -2,14 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/common.dart';
+import '../../../core/widgets/ui.dart';
 import '../../auth/presentation/session_controller.dart';
 import '../../inbox/presentation/inbox_screen.dart';
 import '../../operations/presentation/operations_screen.dart';
+import '../../payments/presentation/payments_screen.dart';
 import '../data/merchant_api.dart';
 import '../data/merchant_models.dart';
-import '../../../core/theme/app_theme.dart';
 
 final dashboardProvider = FutureProvider.autoDispose<Dashboard>((ref) => ref.watch(merchantApiProvider).dashboard());
 
@@ -19,62 +21,97 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final name = ref.watch(sessionProvider).value?.merchant.businessName ?? '';
+    final session = ref.watch(sessionProvider).value;
+    final fullName = session?.me.fullName ?? '';
+    final firstName = fullName.trim().split(RegExp(r'\s+')).first;
     final unread = ref.watch(unreadCountProvider).value ?? 0;
     final operations = ref.watch(activeOperationsProvider);
+    final payments = ref.watch(paymentsProvider(null));
 
     Future<void> refresh() async {
       ref.invalidate(dashboardProvider);
       ref.invalidate(activeOperationsProvider);
       ref.invalidate(unreadCountProvider);
+      ref.invalidate(paymentsProvider(null));
       await ref.read(dashboardProvider.future);
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(name), actions: [
-        IconButton(
-          icon: Badge(isLabelVisible: unread > 0, label: Text('$unread'), child: const Icon(Icons.notifications)),
-          tooltip: l10n.notifications,
-          onPressed: () => context.push('/more/notifications'),
-        ),
-      ]),
-      body: AsyncBody(
-        value: ref.watch(dashboardProvider),
-        onRefresh: refresh,
-        builder: (d) => ListView(padding: const EdgeInsets.all(16), children: [
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 1.6,
-            children: [
-              StatCard(label: l10n.revenue, value: money(d.revenue), icon: Icons.payments),
-              StatCard(label: l10n.passengers, value: '${d.passengers}', icon: Icons.people),
-              StatCard(label: l10n.completedTrips, value: '${d.completedTrips}', icon: Icons.route),
-              StatCard(label: l10n.activeTaxis, value: '${d.activeTaxis}/${d.totalTaxis}', icon: Icons.local_taxi),
-            ],
-          ),
-          if (d.pendingTaxis > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Card(child: ListTile(
-                leading: const Icon(Icons.hourglass_top, color: AppTheme.warning),
-                title: Text('${d.pendingTaxis} · ${l10n.pendingTaxis}'),
-                onTap: () => context.go('/fleet'),
-              )),
+      body: SafeArea(
+        bottom: false,
+        child: AsyncBody(
+          value: ref.watch(dashboardProvider),
+          onRefresh: refresh,
+          builder: (d) => ListView(padding: const EdgeInsets.fromLTRB(20, 16, 20, 24), children: [
+            GreetingHeader(
+              name: fullName,
+              title: l10n.hello(firstName),
+              subtitle: session?.merchant.businessName ?? '',
+              trailing: CircleIconButton(
+                icon: Icons.notifications_none_rounded,
+                badge: unread,
+                tooltip: l10n.notifications,
+                onPressed: () => context.push('/more/notifications'),
+              ),
             ),
-          const SizedBox(height: 20),
-          Text(l10n.onTheRoad, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          switch (operations) {
-            AsyncData(:final value) when value.isEmpty => Text(l10n.noActiveOperations),
-            AsyncData(:final value) => Column(children: [for (final op in value) OperationTile(op)]),
-            AsyncError(:final error) => Text('$error'),
-            _ => const LinearProgressIndicator(),
-          },
-        ]),
+            const SizedBox(height: 22),
+            HeroCard(
+              label: l10n.totalCollected,
+              value: amount(d.revenue),
+              unit: 'ETB',
+              caption: l10n.fromPassengers(d.passengers),
+              footer: Row(children: [
+                Expanded(child: HeroStat(value: '${d.completedTrips}', label: l10n.completedTrips)),
+                Expanded(child: HeroStat(value: '${d.activeTaxis}/${d.totalTaxis}', label: l10n.activeTaxis)),
+              ]),
+            ),
+            if (d.pendingTaxis > 0) ...[
+              const SizedBox(height: 14),
+              SoftCard(
+                onTap: () => context.go('/fleet'),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                child: Row(children: [
+                  const Icon(Icons.hourglass_top_rounded, color: AppTheme.warning),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text('${d.pendingTaxis} · ${l10n.pendingTaxis}', style: const TextStyle(fontWeight: FontWeight.w700))),
+                  const Icon(Icons.chevron_right),
+                ]),
+              ),
+            ],
+            SectionLabel(l10n.yourFleet),
+            TwoUp(
+              MetricTile(icon: Icons.local_taxi_outlined, value: '${d.totalTaxis}', label: l10n.taxis, onTap: () => context.go('/fleet')),
+              MetricTile(icon: Icons.badge_outlined, value: '${d.drivers}', label: l10n.drivers, onTap: () => context.go('/fleet')),
+            ),
+            const SizedBox(height: 12),
+            TwoUp(
+              MetricTile(icon: Icons.alt_route, value: '${d.approvedRoutes}', label: l10n.approvedRoutes, onTap: () => context.go('/fleet')),
+              MetricTile(icon: Icons.groups_outlined, value: '${d.passengers}', label: l10n.passengers, onTap: () => context.go('/payments')),
+            ),
+            SectionLabel(l10n.onTheRoad, action: l10n.start, onAction: () => context.push('/operate/start')),
+            switch (operations) {
+              AsyncData(:final value) when value.isEmpty => SoftCard(
+                  child: Row(children: [
+                    const IconTile(Icons.local_taxi),
+                    const SizedBox(width: 14),
+                    Expanded(child: Text(l10n.noActiveOperations)),
+                  ]),
+                ),
+              AsyncData(:final value) => ListCard(children: [for (final op in value) OperationTile(op)]),
+              AsyncError(:final error) => Text('$error'),
+              _ => const LinearProgressIndicator(),
+            },
+            SectionLabel(l10n.recentPayments, action: l10n.seeAll, onAction: () => context.go('/payments')),
+            switch (payments) {
+              AsyncData(:final value) when value.isEmpty => SoftCard(child: Text(l10n.noPaymentsYet)),
+              AsyncData(:final value) => ListCard(children: [
+                  for (var i = 0; i < value.length && i < 5; i++) PaymentRow(value[i], highlight: i == 0),
+                ]),
+              AsyncError(:final error) => Text('$error'),
+              _ => const LinearProgressIndicator(),
+            },
+          ]),
+        ),
       ),
     );
   }

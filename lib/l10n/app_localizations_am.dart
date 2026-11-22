@@ -161,7 +161,7 @@ class AppLocalizationsAm extends AppLocalizations {
   String get tabPayments => 'ክፍያዎች';
 
   @override
-  String get tabMore => 'ተጨማሪ';
+  String get tabMore => 'መገለጫ';
 
   @override
   String get taxis => 'ታክሲዎች';
@@ -453,4 +453,64 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get notOnAnyRoute => 'እስካሁን ለምንም መስመር አልተመደበም።';
+
+  @override
+  String hello(String name) {
+    return 'ሰላም፣ $name';
+  }
+
+  @override
+  String get totalCollected => 'ጠቅላላ የተሰበሰበ';
+
+  @override
+  String fromPassengers(int count) {
+    return 'ከ$count የከፈሉ ተሳፋሪዎች';
+  }
+
+  @override
+  String get yourFleet => 'የእርስዎ ታክሲዎች';
+
+  @override
+  String get approvedRoutes => 'የጸደቁ መስመሮች';
+
+  @override
+  String get recentPayments => 'የቅርብ ጊዜ ክፍያዎች';
+
+  @override
+  String get seeAll => 'ሁሉንም';
+
+  @override
+  String get today => 'ዛሬ';
+
+  @override
+  String get yesterday => 'ትናንት';
+
+  @override
+  String via(String provider) {
+    return 'በ$provider';
+  }
+
+  @override
+  String get appearance => 'ገጽታ';
+
+  @override
+  String get themeLight => 'ብሩህ';
+
+  @override
+  String get themeDark => 'ጨለማ';
+
+  @override
+  String get themeSystem => 'ራስ-ሰር';
+
+  @override
+  String get noPaymentsYet => 'እስካሁን ክፍያ የለም። ተሳፋሪዎች ሲከፍሉ እዚህ ይታያሉ።';
+
+  @override
+  String get account => 'መለያ';
+
+  @override
+  String get preferences => 'ምርጫዎች';
+
+  @override
+  String get connect => 'አገናኝ';
 }

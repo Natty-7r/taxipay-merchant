@@ -5,6 +5,7 @@ import 'core/locale.dart';
 import 'core/localization.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_mode.dart';
 import 'l10n/app_localizations.dart';
 
 class TaxiPayMerchantApp extends ConsumerWidget {
@@ -16,6 +17,7 @@ class TaxiPayMerchantApp extends ConsumerWidget {
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
+      themeMode: ref.watch(themeModeProvider),
       routerConfig: ref.watch(routerProvider),
       locale: ref.watch(localeProvider),
       supportedLocales: AppLocalizations.supportedLocales,

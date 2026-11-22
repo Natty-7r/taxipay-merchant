@@ -9,6 +9,13 @@ class AppTheme {
   static const navy = Color(0xFF011D33);
   static const white = Color(0xFFFFFFFF);
   static const softBackground = Color(0xFFF8FAFC);
+
+  /// Warm off-white screen background of the app design.
+  static const canvas = Color(0xFFFAF9F6);
+  static const cardBorder = Color(0xFFECEAE5);
+  static const darkCanvas = Color(0xFF07131F);
+  static const darkCard = Color(0xFF0F1F2E);
+  static const darkBorder = Color(0xFF1C3044);
   static const lightYellow = Color(0xFFFFF4CC);
   static const darkYellow = Color(0xFFD99A00);
   static const navyLight = Color(0xFF163B55);
@@ -27,6 +34,7 @@ class AppTheme {
   static const seatPaid = success;
 
   static const radius = 12.0;
+  static const cardRadius = 16.0;
 
   static ThemeData light() => _theme(Brightness.light);
 
@@ -34,10 +42,10 @@ class AppTheme {
 
   static ThemeData _theme(Brightness brightness) {
     final dark = brightness == Brightness.dark;
-    final surface = dark ? const Color(0xFF06192A) : white;
-    final background = dark ? const Color(0xFF00101D) : softBackground;
+    final surface = dark ? darkCard : white;
+    final background = dark ? darkCanvas : canvas;
     final onSurface = dark ? const Color(0xFFF1F5F9) : navy;
-    final outline = dark ? const Color(0xFF1E3A52) : border;
+    final outline = dark ? darkBorder : cardBorder;
 
     final scheme = ColorScheme(
       brightness: brightness,
@@ -57,10 +65,10 @@ class AppTheme {
       onSurface: onSurface,
       onSurfaceVariant: dark ? inactiveIcon : textGray,
       surfaceContainerLowest: surface,
-      surfaceContainerLow: dark ? const Color(0xFF081D30) : white,
-      surfaceContainer: dark ? const Color(0xFF0B2236) : const Color(0xFFF1F5F9),
-      surfaceContainerHigh: dark ? const Color(0xFF0D2437) : const Color(0xFFEFF3F7),
-      surfaceContainerHighest: dark ? const Color(0xFF12304A) : const Color(0xFFE9EEF3),
+      surfaceContainerLow: surface,
+      surfaceContainer: dark ? const Color(0xFF132638) : const Color(0xFFF4F2EE),
+      surfaceContainerHigh: dark ? const Color(0xFF162B3F) : const Color(0xFFF0EEE9),
+      surfaceContainerHighest: dark ? const Color(0xFF1B3349) : const Color(0xFFEAE8E3),
       outline: outline,
       outlineVariant: outline,
       inverseSurface: dark ? white : navy,
@@ -71,46 +79,42 @@ class AppTheme {
     );
 
     final shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
-    final buttonText = const TextStyle(fontWeight: FontWeight.w700, fontSize: 15);
+    final base = ThemeData(brightness: brightness, useMaterial3: true).textTheme;
+    final text = base
+        .apply(bodyColor: onSurface, displayColor: onSurface)
+        .copyWith(
+          headlineSmall: base.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: onSurface),
+          titleLarge: base.titleLarge?.copyWith(fontWeight: FontWeight.w800, color: onSurface),
+          titleMedium: base.titleMedium?.copyWith(fontWeight: FontWeight.w700, color: onSurface),
+          titleSmall: base.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: onSurface),
+        );
+    final buttonText = text.labelLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 15);
 
     return ThemeData(
       colorScheme: scheme,
       useMaterial3: true,
+      textTheme: text,
       scaffoldBackgroundColor: background,
       appBarTheme: AppBarTheme(
-        backgroundColor: navy,
-        foregroundColor: white,
+        backgroundColor: background,
+        foregroundColor: onSurface,
         surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: const TextStyle(color: white, fontSize: 19, fontWeight: FontWeight.w600),
-        iconTheme: const IconThemeData(color: white),
-        actionsIconTheme: const IconThemeData(color: white),
-      ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: navy,
-        surfaceTintColor: Colors.transparent,
-        indicatorColor: yellow,
-        indicatorShape: shape,
-        iconTheme: WidgetStateProperty.resolveWith(
-          (s) => IconThemeData(color: s.contains(WidgetState.selected) ? navy : inactiveIcon),
-        ),
-        labelTextStyle: WidgetStateProperty.resolveWith(
-          (s) => TextStyle(
-            fontSize: 12,
-            fontWeight: s.contains(WidgetState.selected) ? FontWeight.w700 : FontWeight.w500,
-            color: s.contains(WidgetState.selected) ? yellow : inactiveIcon,
-          ),
-        ),
+        titleTextStyle: text.titleLarge?.copyWith(color: onSurface, fontSize: 22, fontWeight: FontWeight.w800, letterSpacing: -0.3),
+        iconTheme: IconThemeData(color: onSurface),
+        actionsIconTheme: IconThemeData(color: onSurface),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: yellow,
           foregroundColor: navy,
-          disabledBackgroundColor: dark ? const Color(0xFF1E3A52) : border,
-          minimumSize: const Size.fromHeight(50),
+          disabledBackgroundColor: outline,
+          minimumSize: const Size.fromHeight(52),
           shape: shape,
           textStyle: buttonText,
+          elevation: 0,
         ).copyWith(
           overlayColor: WidgetStateProperty.resolveWith(
             (s) => s.contains(WidgetState.pressed) ? darkYellow.withValues(alpha: 0.5) : null,
@@ -123,18 +127,21 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: onSurface,
+          backgroundColor: surface,
           side: BorderSide(color: outline),
           shape: shape,
           minimumSize: const Size(0, 46),
+          textStyle: text.labelLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: dark ? yellow : navyLight, textStyle: const TextStyle(fontWeight: FontWeight.w600)),
+        style: TextButton.styleFrom(foregroundColor: dark ? yellow : navy, textStyle: text.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: yellow,
         foregroundColor: navy,
-        shape: shape,
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cardRadius)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -143,32 +150,56 @@ class AppTheme {
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(radius), borderSide: BorderSide(color: outline)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(color: dark ? yellow : navy, width: 1.6),
+          borderSide: const BorderSide(color: yellow, width: 1.8),
         ),
-        floatingLabelStyle: TextStyle(color: dark ? yellow : navy),
+        floatingLabelStyle: text.bodyLarge?.copyWith(color: onSurface, fontWeight: FontWeight.w600),
       ),
       cardTheme: CardThemeData(
         margin: EdgeInsets.zero,
         color: surface,
         surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius), side: BorderSide(color: outline)),
+        shadowColor: Colors.black.withValues(alpha: dark ? 0.3 : 0.06),
+        elevation: dark ? 0 : 1.5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cardRadius), side: BorderSide(color: outline)),
       ),
       chipTheme: ChipThemeData(
+        backgroundColor: surface,
         selectedColor: yellow,
         checkmarkColor: navy,
+        labelStyle: text.labelLarge?.copyWith(color: onSurface, fontWeight: FontWeight.w600),
+        secondaryLabelStyle: text.labelLarge?.copyWith(color: navy, fontWeight: FontWeight.w700),
         side: BorderSide(color: outline),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
-        style: SegmentedButton.styleFrom(selectedBackgroundColor: yellow, selectedForegroundColor: navy),
+        style: SegmentedButton.styleFrom(selectedBackgroundColor: yellow, selectedForegroundColor: navy, side: BorderSide(color: outline)),
+      ),
+      tabBarTheme: TabBarThemeData(
+        labelColor: onSurface,
+        unselectedLabelColor: dark ? inactiveIcon : textGray,
+        indicatorColor: yellow,
+        dividerColor: outline,
+        labelStyle: text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(color: yellow),
-      dividerTheme: DividerThemeData(color: outline, space: 1),
-      listTileTheme: ListTileThemeData(iconColor: dark ? inactiveIcon : navyLight),
+      dividerTheme: DividerThemeData(color: outline, space: 1, thickness: 1),
+      listTileTheme: ListTileThemeData(
+        iconColor: onSurface,
+        titleTextStyle: text.bodyLarge?.copyWith(color: onSurface, fontSize: 15, fontWeight: FontWeight.w700),
+        subtitleTextStyle: text.bodySmall?.copyWith(color: dark ? inactiveIcon : textGray, fontSize: 12.5),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: surface,
+        showDragHandle: true,
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: navy,
-        contentTextStyle: const TextStyle(color: white),
+        contentTextStyle: text.bodyMedium?.copyWith(color: white),
         actionTextColor: yellow,
         behavior: SnackBarBehavior.floating,
         shape: shape,
