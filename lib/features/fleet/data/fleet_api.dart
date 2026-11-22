@@ -19,6 +19,10 @@ class FleetApi {
   Future<Taxi> createTaxi(Json request) =>
       _api.post('/api/merchant/taxis', body: request, map: (d) => Taxi.fromJson(d as Json));
 
+  /// Edit a taxi (pending or rejected; an approved taxi goes back to review when its identity changes).
+  Future<Taxi> updateTaxi(int id, Json request) =>
+      _api.put('/api/merchant/taxis/$id', body: request, map: (d) => Taxi.fromJson(d as Json));
+
   Future<List<SeatTemplate>> seatTemplates() =>
       _api.get('/api/merchant/seat-templates', map: (d) => listOf(d, SeatTemplate.fromJson));
 
@@ -56,6 +60,10 @@ class FleetApi {
 
   Future<RouteInfo> createRoute(Json request) =>
       _api.post('/api/merchant/routes', body: request, map: (d) => RouteInfo.fromJson(d as Json));
+
+  /// Edit a draft or rejected route's name and stops (prices of legs that stay are kept).
+  Future<RouteInfo> updateRoute(int id, Json request) =>
+      _api.put('/api/merchant/routes/$id', body: request, map: (d) => RouteInfo.fromJson(d as Json));
 
   Future<RouteInfo> submitRoute(int id) =>
       _api.post('/api/merchant/routes/$id/submit', map: (d) => RouteInfo.fromJson(d as Json));

@@ -620,4 +620,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vehicleOther => 'Other';
+
+  @override
+  String get editTaxi => 'Edit taxi';
+
+  @override
+  String get editRoute => 'Edit route';
+
+  @override
+  String get editApprovedTaxiHint =>
+      'Changing the plate, type, make, model or year sends the taxi back for review.';
+
+  @override
+  String qrCodeLabel(String code) {
+    return 'Code: $code';
+  }
 }

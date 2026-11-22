@@ -45,7 +45,14 @@ class RouteDetailScreen extends ConsumerWidget {
     final text = Theme.of(context).textTheme;
     final route = ref.watch(routeProvider(routeId));
     return Scaffold(
-      appBar: AppBar(title: Text(route.value?.name ?? l10n.route)),
+      appBar: AppBar(title: Text(route.value?.name ?? l10n.route), actions: [
+        if (route.value?.editable == true)
+          IconButton(
+            tooltip: l10n.editRoute,
+            icon: const Icon(AppIcons.pencil),
+            onPressed: () => context.push('/fleet/routes/$routeId/edit', extra: route.value),
+          ),
+      ]),
       body: AsyncBody(
         value: route,
         onRefresh: () => ref.refresh(routeProvider(routeId).future),
@@ -325,7 +332,10 @@ class _RoutePricesScreenState extends ConsumerState<RoutePricesScreen> {
 }
 
 class AddRouteScreen extends ConsumerStatefulWidget {
-  const AddRouteScreen({super.key});
+  const AddRouteScreen({super.key, this.initial});
+
+  /// Editing this draft / rejected route instead of creating one.
+  final RouteInfo? initial;
 
   @override
   ConsumerState<AddRouteScreen> createState() => _AddRouteScreenState();
@@ -336,6 +346,23 @@ class _AddRouteScreenState extends ConsumerState<AddRouteScreen> {
   final _name = TextEditingController();
   final List<TextEditingController> _stops = [TextEditingController(), TextEditingController()];
   bool _busy = false;
+
+  bool get _editing => widget.initial != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final r = widget.initial;
+    if (r != null) {
+      _name.text = r.name;
+      for (final s in _stops) {
+        s.dispose();
+      }
+      _stops
+        ..clear()
+        ..addAll([for (final stop in r.stops) TextEditingController(text: stop)]);
+    }
+  }
 
   @override
   void dispose() {
@@ -350,12 +377,20 @@ class _AddRouteScreenState extends ConsumerState<AddRouteScreen> {
     if (!_form.currentState!.validate()) return;
     setState(() => _busy = true);
     final ok = await runAction(context, () async {
-      final route = await ref.read(fleetApiProvider).createRoute({
+      final api = ref.read(fleetApiProvider);
+      final body = {
         'name': _name.text.trim(),
         'points': [for (final s in _stops) {'name': s.text.trim()}],
-      });
+      };
       ref.invalidate(routesProvider);
-      if (mounted) context.pushReplacement('/fleet/routes/${route.id}');
+      if (_editing) {
+        await api.updateRoute(widget.initial!.id, body);
+        ref.invalidate(routeProvider(widget.initial!.id));
+        if (mounted) context.pop();
+      } else {
+        final route = await api.createRoute(body);
+        if (mounted) context.pushReplacement('/fleet/routes/${route.id}');
+      }
     });
     if (mounted && !ok) setState(() => _busy = false);
   }
@@ -364,7 +399,7 @@ class _AddRouteScreenState extends ConsumerState<AddRouteScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.addRoute)),
+      appBar: AppBar(title: Text(_editing ? l10n.editRoute : l10n.addRoute)),
       body: Form(
         key: _form,
         child: ListView(padding: const EdgeInsets.all(16), children: [

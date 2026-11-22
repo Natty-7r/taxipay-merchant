@@ -192,5 +192,9 @@
   "editSeats": "መቀመጫዎችን አስተካክል",
   "seatsSaved": "የመቀመጫ አቀማመጥ ተቀምጧል",
   "chooseLayout": "አቀማመጥ ይምረጡ ወይም የራስዎን ይስሩ",
-  "vehicleOther": "ሌላ"
+  "vehicleOther": "ሌላ",
+  "editTaxi": "ታክሲ አስተካክል",
+  "editRoute": "መስመር አስተካክል",
+  "editApprovedTaxiHint": "ታርጋ፣ ዓይነት፣ አምራች፣ ሞዴል ወይም ዓመት መቀየር ታክሲውን ለግምገማ ይመልሰዋል።",
+  "qrCodeLabel": "ኮድ፦ {code}"
 }

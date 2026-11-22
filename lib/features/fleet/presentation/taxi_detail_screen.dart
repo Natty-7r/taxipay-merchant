@@ -21,7 +21,14 @@ class TaxiDetailScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final taxi = ref.watch(taxiProvider(taxiId));
     return Scaffold(
-      appBar: AppBar(title: Text(taxi.value?.plateNumber ?? l10n.taxi)),
+      appBar: AppBar(title: Text(taxi.value?.plateNumber ?? l10n.taxi), actions: [
+        if (taxi.value != null)
+          IconButton(
+            tooltip: l10n.editTaxi,
+            icon: const Icon(AppIcons.pencil),
+            onPressed: () => context.push('/fleet/taxis/$taxiId/edit', extra: taxi.value),
+          ),
+      ]),
       body: AsyncBody(
         value: taxi,
         onRefresh: () => ref.refresh(taxiProvider(taxiId).future),

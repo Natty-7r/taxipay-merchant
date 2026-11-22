@@ -613,4 +613,19 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get vehicleOther => 'ሌላ';
+
+  @override
+  String get editTaxi => 'ታክሲ አስተካክል';
+
+  @override
+  String get editRoute => 'መስመር አስተካክል';
+
+  @override
+  String get editApprovedTaxiHint =>
+      'ታርጋ፣ ዓይነት፣ አምራች፣ ሞዴል ወይም ዓመት መቀየር ታክሲውን ለግምገማ ይመልሰዋል።';
+
+  @override
+  String qrCodeLabel(String code) {
+    return 'ኮድ፦ $code';
+  }
 }

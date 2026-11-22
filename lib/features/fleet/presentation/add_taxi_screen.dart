@@ -11,7 +11,10 @@ import 'fleet_providers.dart';
 import 'seat_layout_editor.dart';
 
 class AddTaxiScreen extends ConsumerStatefulWidget {
-  const AddTaxiScreen({super.key});
+  const AddTaxiScreen({super.key, this.initial});
+
+  /// Editing this taxi instead of registering a new one.
+  final Taxi? initial;
 
   @override
   ConsumerState<AddTaxiScreen> createState() => _AddTaxiScreenState();
@@ -30,6 +33,25 @@ class _AddTaxiScreenState extends ConsumerState<AddTaxiScreen> {
   int? _driverId;
   bool _busy = false;
 
+  bool get _editing => widget.initial != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final t = widget.initial;
+    if (t != null) {
+      _plate.text = t.plateNumber;
+      _side.text = t.sideNumber ?? '';
+      _make.text = t.manufacturer;
+      _model.text = t.model;
+      _year.text = t.year?.toString() ?? '';
+      _color.text = t.color ?? '';
+      _vehicleType = t.vehicleType;
+      _driverId = t.defaultDriverId;
+      _layout = SeatLayoutValue.fromRows(t.seatRows, template: t.seatTemplate, side: t.sideSeats.length);
+    }
+  }
+
   @override
   void dispose() {
     for (final c in [_plate, _side, _make, _model, _year, _color]) {
@@ -42,7 +64,8 @@ class _AddTaxiScreenState extends ConsumerState<AddTaxiScreen> {
     if (!_form.currentState!.validate() || _layout.isEmpty) return;
     setState(() => _busy = true);
     final ok = await runAction(context, () async {
-      final taxi = await ref.read(fleetApiProvider).createTaxi({
+      final api = ref.read(fleetApiProvider);
+      final body = {
         'plateNumber': _plate.text.trim(),
         if (_side.text.trim().isNotEmpty) 'sideNumber': _side.text.trim(),
         'vehicleType': _vehicleType,
@@ -52,9 +75,16 @@ class _AddTaxiScreenState extends ConsumerState<AddTaxiScreen> {
         if (_color.text.trim().isNotEmpty) 'color': _color.text.trim(),
         'seatLayout': _layout.toRequest(),
         'defaultDriverId': ?_driverId,
-      });
+      };
       ref.invalidate(taxisProvider);
-      if (mounted) context.pushReplacement('/fleet/taxis/${taxi.id}');
+      if (_editing) {
+        await api.updateTaxi(widget.initial!.id, body);
+        ref.invalidate(taxiProvider(widget.initial!.id));
+        if (mounted) context.pop();
+      } else {
+        final taxi = await api.createTaxi(body);
+        if (mounted) context.pushReplacement('/fleet/taxis/${taxi.id}');
+      }
     });
     if (mounted && !ok) setState(() => _busy = false);
   }
@@ -64,10 +94,12 @@ class _AddTaxiScreenState extends ConsumerState<AddTaxiScreen> {
     final l10n = context.l10n;
     final drivers = ref.watch(driversProvider).value ?? const <Driver>[];
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.addTaxi)),
+      appBar: AppBar(title: Text(_editing ? l10n.editTaxi : l10n.addTaxi)),
       body: Form(
         key: _form,
         child: ListView(padding: const EdgeInsets.all(16), children: [
+          if (_editing && widget.initial!.status == 'APPROVED')
+            Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(l10n.editApprovedTaxiHint)),
           TextFormField(controller: _plate, textCapitalization: TextCapitalization.characters,
               decoration: InputDecoration(labelText: l10n.plateNumber, hintText: 'AA 3-12345'),
               validator: (v) => requiredValidator(context, v)),

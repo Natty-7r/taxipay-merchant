@@ -183,7 +183,6 @@ class QrPoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final host = Uri.tryParse(qr.value)?.host ?? '';
     final live = routes.where((r) => r.status == 'APPROVED').toList();
 
     // Always light, whatever the app theme: this is for paper.
@@ -250,7 +249,8 @@ class QrPoster extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Text(host, style: const TextStyle(color: AppTheme.textGray, fontSize: 10)),
+            Text(l10n.qrCodeLabel(qr.value),
+                style: const TextStyle(color: AppTheme.navy, fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.6)),
             const SizedBox(height: 10),
             // Routes.
             if (live.isNotEmpty)

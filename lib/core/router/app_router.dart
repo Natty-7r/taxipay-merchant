@@ -7,6 +7,7 @@ import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../features/auth/presentation/session_controller.dart';
 import '../../features/auth/presentation/splash_screen.dart';
+import '../../features/fleet/data/fleet_models.dart';
 import '../../features/fleet/presentation/add_driver_screen.dart';
 import '../../features/fleet/presentation/add_taxi_screen.dart';
 import '../../features/fleet/presentation/edit_seats_screen.dart';
@@ -72,6 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(path: 'qr', builder: (_, s) => QrPosterScreen(taxiId: int.parse(s.pathParameters['id']!))),
                   GoRoute(path: 'seats', builder: (_, s) => EditSeatsScreen(taxiId: int.parse(s.pathParameters['id']!))),
+                  GoRoute(path: 'edit', builder: (_, s) => AddTaxiScreen(initial: s.extra as Taxi?)),
                 ],
               ),
               GoRoute(path: 'drivers/new', builder: (_, _) => const AddDriverScreen()),
@@ -81,6 +83,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (_, s) => RouteDetailScreen(routeId: int.parse(s.pathParameters['id']!)),
                 routes: [
                   GoRoute(path: 'prices', builder: (_, s) => RoutePricesScreen(routeId: int.parse(s.pathParameters['id']!))),
+                  GoRoute(path: 'edit', builder: (_, s) => AddRouteScreen(initial: s.extra as RouteInfo?)),
                 ],
               ),
             ]),

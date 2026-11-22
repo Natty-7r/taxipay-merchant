@@ -1255,6 +1255,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get vehicleOther;
+
+  /// No description provided for @editTaxi.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit taxi'**
+  String get editTaxi;
+
+  /// No description provided for @editRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit route'**
+  String get editRoute;
+
+  /// No description provided for @editApprovedTaxiHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the plate, type, make, model or year sends the taxi back for review.'**
+  String get editApprovedTaxiHint;
+
+  /// No description provided for @qrCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code: {code}'**
+  String qrCodeLabel(String code);
 }
 
 class _AppLocalizationsDelegate

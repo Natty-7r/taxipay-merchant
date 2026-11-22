@@ -269,5 +269,16 @@
   "editSeats": "Edit seats",
   "seatsSaved": "Seat layout saved",
   "chooseLayout": "Choose a layout or build your own",
-  "vehicleOther": "Other"
+  "vehicleOther": "Other",
+  "editTaxi": "Edit taxi",
+  "editRoute": "Edit route",
+  "editApprovedTaxiHint": "Changing the plate, type, make, model or year sends the taxi back for review.",
+  "qrCodeLabel": "Code: {code}",
+  "@qrCodeLabel": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  }
 }
