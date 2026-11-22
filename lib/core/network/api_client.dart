@@ -9,20 +9,26 @@ import '../logging/app_logger.dart';
 import '../storage/token_storage.dart';
 import 'api_exception.dart';
 import 'page.dart';
+import 'secure_channel.dart';
 
 /// Thin layer over Dio for the Taxi Pay API:
 /// * unwraps the `{ success, data }` envelope and turns errors into [ApiException];
 /// * sends `Authorization: Bearer …` and an `X-Request-Id` (trace id) on every call;
 /// * on 401 with an expired token, refreshes once (rotating the refresh token) and retries;
-///   if that fails, [onSessionExpired] signs the user out.
+///   if that fails, [onSessionExpired] signs the user out;
+/// * with the secure channel on, JSON bodies both ways are end-to-end encrypted (see
+///   [SecureSession]); the session is negotiated on first use and renewed when it expires.
 class ApiClient {
-  ApiClient(this._tokens, {Dio? dio, String? baseUrl}) : _dio = dio ?? Dio() {
+  ApiClient(this._tokens, {Dio? dio, String? baseUrl, bool? secureChannel, String? serverKey})
+      : _dio = dio ?? Dio(),
+        _secureOn = secureChannel ?? Env.secureChannel,
+        _serverKey = serverKey ?? Env.secureChannelServerKey {
     _dio.options
       ..baseUrl = baseUrl ?? Env.apiBaseUrl
       ..connectTimeout = const Duration(seconds: 10)
       ..receiveTimeout = const Duration(seconds: 20)
       ..headers['Accept'] = 'application/json';
-    _dio.interceptors.add(QueuedInterceptorsWrapper(onRequest: _onRequest, onError: _onError));
+    _dio.interceptors.add(QueuedInterceptorsWrapper(onRequest: _onRequest, onResponse: _onResponse, onError: _onError));
     if (Env.logHttp && !kReleaseMode) {
       _dio.interceptors.add(LogInterceptor(
         requestBody: false, // never log passwords or tokens
@@ -35,6 +41,10 @@ class ApiClient {
   final Dio _dio;
   final TokenStorage _tokens;
   final _random = Random.secure();
+  final bool _secureOn;
+  final String _serverKey;
+  SecureSession? _secure;
+  Uint8List? _pinned;
 
   /// Called when the session can't be renewed (refresh token expired / revoked).
   VoidCallback? onSessionExpired;
@@ -105,12 +115,48 @@ class ApiClient {
     options.headers['X-Request-Id'] = _traceId();
     final token = await _tokens.accessToken();
     if (token != null && options.extra['noAuth'] != true) options.headers['Authorization'] = 'Bearer $token';
+    if (_wantsSecure(options)) {
+      try {
+        _seal(options, await _secureSession());
+      } catch (e) {
+        // Fail closed: never fall back to plain JSON when the channel can't be set up.
+        appLogger.w('Secure channel unavailable: $e');
+        return handler.reject(DioException(requestOptions: options, error: e, message: 'Secure channel unavailable'));
+      }
+    }
     handler.next(options);
   }
 
+  void _onResponse(Response<dynamic> res, ResponseInterceptorHandler handler) {
+    try {
+      _open(res);
+    } catch (e) {
+      appLogger.w('Secure channel: response for ${res.requestOptions.path} could not be opened: $e');
+      return handler.reject(DioException(requestOptions: res.requestOptions, response: res, error: e,
+          message: 'Response failed the integrity check'));
+    }
+    handler.next(res);
+  }
+
   Future<void> _onError(DioException e, ErrorInterceptorHandler handler) async {
+    if (e.response != null) {
+      try {
+        _open(e.response!); // error bodies are sealed too
+      } catch (_) {
+        return handler.next(e);
+      }
+    }
     final code = e.response?.data is Map ? (e.response!.data as Map)['errorCode'] : null;
     final expired = e.response?.statusCode == 401 && (code == 'INVALID_TOKEN' || code == 'TOKEN_EXPIRED');
+    // The API restarted or the session timed out: new handshake, same request.
+    if (e.response?.statusCode == 428 && code == 'SECURE_SESSION_EXPIRED' && e.requestOptions.extra['scRetried'] != true) {
+      _secure = null;
+      try {
+        return handler.resolve(await _dio.fetch(e.requestOptions..extra['scRetried'] = true));
+      } on DioException catch (again) {
+        return handler.next(again);
+      }
+    }
     if (!expired || e.requestOptions.extra['retried'] == true) return handler.next(e);
 
     if (await _refresh()) {
@@ -142,6 +188,62 @@ class ApiClient {
       appLogger.w('Session refresh failed: $e');
       return false;
     }
+  }
+
+  // ------------------------------------------------------------ secure channel
+
+  bool _wantsSecure(RequestOptions o) =>
+      _secureOn &&
+      o.extra['noSecure'] != true &&
+      o.responseType != ResponseType.stream &&
+      !o.path.startsWith('/api/secure/') &&
+      !o.path.startsWith('/api/events');
+
+  /// Current session, or a new handshake (requests are queued, so only one runs at a time).
+  Future<SecureSession> _secureSession() async {
+    final current = _secure;
+    if (current != null && current.usable) return current;
+    final bare = Dio(BaseOptions(baseUrl: _dio.options.baseUrl, connectTimeout: _dio.options.connectTimeout))
+      ..httpClientAdapter = _dio.httpClientAdapter;
+    _pinned ??= await _serverPublicKey(bare);
+    final session = await SecureSession.establish(
+      pinnedServerKey: _pinned!,
+      post: (body) async => ((await bare.post('/api/secure/handshake', data: body)).data as Map)['data'] as Map<String, dynamic>,
+    );
+    appLogger.i('Secure channel established');
+    return _secure = session;
+  }
+
+  Future<Uint8List> _serverPublicKey(Dio bare) async {
+    if (_serverKey.isNotEmpty) return base64Decode(_serverKey);
+    appLogger.w('SECURE_CHANNEL_SERVER_KEY not set — trusting the key the API sends (development only)');
+    final res = await bare.get('/api/secure/key');
+    return base64Decode(((res.data as Map)['data'] as Map)['publicKey'] as String);
+  }
+
+  /// Session headers, and the JSON body encrypted. The plain body is kept so a retry re-seals it.
+  void _seal(RequestOptions o, SecureSession session) {
+    final seq = session.nextSeq();
+    o.headers['X-Secure-Session'] = session.id;
+    o.headers['X-Secure-Seq'] = '$seq';
+    o.extra['scSeq'] = seq;
+    o.extra['scSession'] = session;
+    if (!o.extra.containsKey('scPlain')) o.extra['scPlain'] = o.data;
+    final plain = o.extra['scPlain'];
+    if (plain == null || plain is FormData) {
+      o.data = plain; // uploads go as they are (still bound to the session)
+      return;
+    }
+    o.data = session.sealJson(plain, o.method, o.uri.path, seq);
+    o.contentType = Headers.jsonContentType;
+  }
+
+  void _open(Response<dynamic> res) {
+    if (res.headers.value('x-secure-response') != '1') return;
+    final session = res.requestOptions.extra['scSession'] as SecureSession?;
+    final seq = res.requestOptions.extra['scSeq'] as int?;
+    if (session == null || seq == null || res.data is! Map) throw StateError('unexpected sealed response');
+    res.data = session.openJson(Map<String, dynamic>.from(res.data as Map), seq);
   }
 
   String _traceId() => List.generate(16, (_) => _random.nextInt(16).toRadixString(16)).join();

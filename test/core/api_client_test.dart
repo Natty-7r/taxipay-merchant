@@ -10,7 +10,7 @@ void main() {
 
   ApiClient client(FakeAdapter adapter) {
     final dio = Dio()..httpClientAdapter = adapter;
-    return ApiClient(tokens, dio: dio, baseUrl: 'http://api.test');
+    return ApiClient(tokens, dio: dio, baseUrl: 'http://api.test', secureChannel: false);
   }
 
   setUp(() => tokens = FakeTokenStorage()

@@ -4,6 +4,9 @@
 #
 #   tool/build_apk.sh http://192.168.1.7:8080            # debug APK
 #   tool/build_apk.sh http://192.168.1.7:8080 --release   # any extra flutter build args
+#
+# Secure channel: export SECURE_CHANNEL_SERVER_KEY (the key the API logs at startup, or
+# GET /api/secure/key) to pin it in the app.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -30,6 +33,13 @@ PY
   echo "Push notifications: Firebase project $PROJECT_ID"
 else
   echo "No $GS — building without push notifications (live updates still work while the app is open)."
+fi
+
+if [[ -n "${SECURE_CHANNEL_SERVER_KEY:-}" ]]; then
+  DEFINES+=(--dart-define=SECURE_CHANNEL_SERVER_KEY="$SECURE_CHANNEL_SERVER_KEY")
+  echo "Secure channel: server key pinned"
+else
+  echo "Secure channel: no SECURE_CHANNEL_SERVER_KEY — the app will trust the key the API sends (development only)."
 fi
 
 flutter build apk $MODE "${DEFINES[@]}" "$@"

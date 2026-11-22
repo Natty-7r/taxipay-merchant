@@ -13,6 +13,14 @@ class Env {
   static const firebaseSenderId = String.fromEnvironment('FIREBASE_SENDER_ID');
   static const firebaseProjectId = String.fromEnvironment('FIREBASE_PROJECT_ID');
 
+  /// App-layer encryption on top of TLS (ECDH P-256 + AES-256-GCM, see secure_channel.dart).
+  static const secureChannel = bool.fromEnvironment('SECURE_CHANNEL', defaultValue: true);
+
+  /// The API's long-term secure-channel public key (base64 raw P-256 point), printed by the API at
+  /// startup and served at GET /api/secure/key. Pinning it is what stops a man in the middle; when
+  /// empty the app fetches it from the API on first use (fine for development only).
+  static const secureChannelServerKey = String.fromEnvironment('SECURE_CHANNEL_SERVER_KEY');
+
   /// Verbose HTTP logs (never in release builds).
   static const logHttp = bool.fromEnvironment('LOG_HTTP', defaultValue: true);
 }
