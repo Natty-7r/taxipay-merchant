@@ -11,6 +11,7 @@ import '../../fleet/presentation/seat_grid.dart';
 import '../data/operation_models.dart';
 import '../data/operations_api.dart';
 import 'operations_screen.dart';
+import '../../../core/theme/app_icons.dart';
 
 final liveTaxiProvider =
     FutureProvider.autoDispose.family<LiveTaxi, int>((ref, taxiId) => ref.watch(operationsApiProvider).live(taxiId));
@@ -59,7 +60,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
       appBar: AppBar(title: Text(live.value?.plateNumber ?? l10n.taxi), actions: [
         IconButton(
           tooltip: l10n.viewTaxi,
-          icon: const Icon(Icons.info_outline),
+          icon: const Icon(AppIcons.infoOutline),
           onPressed: () => context.push('/fleet/taxis/${widget.taxiId}'),
         ),
       ]),
@@ -79,7 +80,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
                   Flexible(
                     child: Text('${op.route.name ?? ''} · ${op.driver.name ?? ''}', style: Theme.of(context).textTheme.titleMedium),
                   ),
-                  const Icon(Icons.chevron_right, size: 20),
+                  const Icon(AppIcons.chevronRight, size: 20),
                 ]),
               ),
               const SizedBox(height: 4),
@@ -90,7 +91,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
               else
                 Card(
                   child: ListTile(
-                    leading: Icon(trip.boarding ? Icons.groups : Icons.directions_bus),
+                    leading: Icon(trip.boarding ? AppIcons.groups : AppIcons.directionsBus),
                     title: Text('${l10n.trip} ${trip.tripNumber}: ${trip.from} → ${trip.to}'),
                     subtitle: Text('${trip.boarding ? l10n.boarding : l10n.onTheRoadStatus} · '
                         '${trip.passengers} ${l10n.passengers} · ${money(trip.revenue)}'),
@@ -121,17 +122,17 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
               const SizedBox(height: 20),
               if (trip != null && trip.boarding)
                 FilledButton.icon(onPressed: _busy ? null : () => _act(() => api.depart(trip.id)),
-                    icon: const Icon(Icons.play_arrow), label: Text(l10n.depart)),
+                    icon: const Icon(AppIcons.playArrow), label: Text(l10n.depart)),
               if (trip != null && trip.onTheRoad) ...[
                 FilledButton.icon(onPressed: _busy ? null : () => _act(() => api.complete(trip.id, openNext: true)),
-                    icon: const Icon(Icons.swap_horiz), label: Text(l10n.completeAndReturn)),
+                    icon: const Icon(AppIcons.swapHoriz), label: Text(l10n.completeAndReturn)),
                 const SizedBox(height: 8),
                 OutlinedButton(onPressed: _busy ? null : () => _act(() => api.complete(trip.id, openNext: false)),
                     child: Text(l10n.completeTrip)),
               ],
               if (trip == null)
                 FilledButton.icon(onPressed: _busy ? null : () => _act(() => api.openTrip(op.id)),
-                    icon: const Icon(Icons.add), label: Text(l10n.openNextTrip)),
+                    icon: const Icon(AppIcons.add), label: Text(l10n.openNextTrip)),
               const SizedBox(height: 8),
               if (trip == null || trip.boarding)
                 TextButton.icon(
@@ -141,7 +142,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
                           await _act(() => api.finish(op.id));
                           if (context.mounted) context.pop();
                         },
-                  icon: const Icon(Icons.stop),
+                  icon: const Icon(AppIcons.stop),
                   label: Text(l10n.finishOperation),
                 ),
             ],

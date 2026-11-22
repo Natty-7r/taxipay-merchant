@@ -8,6 +8,7 @@ import '../../../core/widgets/common.dart';
 import '../../../core/widgets/ui.dart';
 import '../data/operation_models.dart';
 import '../data/operations_api.dart';
+import '../../../core/theme/app_icons.dart';
 
 final activeOperationsProvider =
     FutureProvider.autoDispose<List<Operation>>((ref) => ref.watch(operationsApiProvider).active());
@@ -27,14 +28,14 @@ class OperationsScreen extends ConsumerWidget {
         builder: (ops) => ListView(padding: pagePadding, children: [
           FilledButton.icon(
             onPressed: () => context.push('/operate/start'),
-            icon: const Icon(Icons.play_arrow_rounded),
+            icon: const Icon(AppIcons.playArrowRounded),
             label: Text(l10n.startOperation),
           ),
           SectionLabel(l10n.onTheRoad),
           if (ops.isEmpty)
             SoftCard(
               child: Row(children: [
-                const IconTile(Icons.local_taxi),
+                const IconTile(AppIcons.localTaxi),
                 const SizedBox(width: 14),
                 Expanded(child: Text(l10n.noActiveOperations)),
               ]),

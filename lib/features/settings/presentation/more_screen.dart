@@ -13,6 +13,7 @@ import '../../auth/data/auth_api.dart';
 import '../../auth/presentation/session_controller.dart';
 import '../../inbox/data/inbox_api.dart';
 import '../../inbox/data/inbox_models.dart';
+import '../../../core/theme/app_icons.dart';
 
 final telegramStatusProvider =
     FutureProvider.autoDispose<TelegramStatus>((ref) => ref.watch(inboxApiProvider).telegram());
@@ -70,15 +71,15 @@ class MoreScreen extends ConsumerWidget {
         SectionLabel(l10n.account),
         ListCard(children: [
           ListTile(
-            leading: const Icon(Icons.notifications_none_rounded),
+            leading: const Icon(AppIcons.notificationsNoneRounded),
             title: Text(l10n.notifications),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: const Icon(AppIcons.chevronRight),
             onTap: () => context.push('/more/notifications'),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
             child: Row(children: [
-              const Icon(Icons.telegram),
+              const Icon(AppIcons.telegram),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -118,7 +119,7 @@ class MoreScreen extends ConsumerWidget {
         SectionLabel(l10n.preferences),
         ListCard(children: [
           ListTile(
-            leading: const Icon(Icons.language),
+            leading: const Icon(AppIcons.language),
             title: Text(l10n.language),
             trailing: SegmentedButton<String>(
               showSelectedIcon: false,
@@ -131,7 +132,7 @@ class MoreScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                const Icon(Icons.contrast),
+                const Icon(AppIcons.contrast),
                 const SizedBox(width: 16),
                 Text(l10n.appearance, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
               ]),
@@ -141,9 +142,9 @@ class MoreScreen extends ConsumerWidget {
                 child: SegmentedButton<ThemeMode>(
                   showSelectedIcon: false,
                   segments: [
-                    ButtonSegment(value: ThemeMode.light, icon: const Icon(Icons.light_mode_outlined), label: Text(l10n.themeLight)),
-                    ButtonSegment(value: ThemeMode.dark, icon: const Icon(Icons.dark_mode_outlined), label: Text(l10n.themeDark)),
-                    ButtonSegment(value: ThemeMode.system, icon: const Icon(Icons.brightness_auto_outlined), label: Text(l10n.themeSystem)),
+                    ButtonSegment(value: ThemeMode.light, icon: const Icon(AppIcons.lightModeOutlined), label: Text(l10n.themeLight)),
+                    ButtonSegment(value: ThemeMode.dark, icon: const Icon(AppIcons.darkModeOutlined), label: Text(l10n.themeDark)),
+                    ButtonSegment(value: ThemeMode.system, icon: const Icon(AppIcons.brightnessAutoOutlined), label: Text(l10n.themeSystem)),
                   ],
                   selected: {themeMode},
                   onSelectionChanged: (s) => ref.read(themeModeProvider.notifier).set(s.first),
@@ -152,7 +153,7 @@ class MoreScreen extends ConsumerWidget {
             ]),
           ),
           SwitchListTile(
-            secondary: const Icon(Icons.local_offer_outlined),
+            secondary: const Icon(AppIcons.localOfferOutlined),
             title: Text(l10n.offers),
             value: me.marketingOptIn,
             activeTrackColor: AppTheme.yellow,
@@ -166,7 +167,7 @@ class MoreScreen extends ConsumerWidget {
         const SizedBox(height: 24),
         ListCard(children: [
           ListTile(
-            leading: const Icon(Icons.logout, color: AppTheme.error),
+            leading: const Icon(AppIcons.logout, color: AppTheme.error),
             title: Text(l10n.logout, style: const TextStyle(color: AppTheme.error, fontWeight: FontWeight.w700)),
             onTap: () => ref.read(sessionProvider.notifier).logout(),
           ),

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_client.dart';
@@ -25,7 +23,8 @@ class FleetApi {
       _api.get('/api/merchant/seat-templates', map: (d) => listOf(d, SeatTemplate.fromJson));
 
   /// PNG of the taxi's QR code, ready to print.
-  Future<Uint8List> qrPng(int taxiId) => _api.bytes('/api/merchant/taxis/$taxiId/qr', query: {'size': 1000});
+  /// The text to encode in the taxi's QR code (approved taxis only); the app draws the image.
+  Future<TaxiQr> qr(int taxiId) => _api.get('/api/merchant/taxis/$taxiId/qr', map: (d) => TaxiQr.fromJson(d as Json));
 
   // ---- drivers
   Future<List<Driver>> drivers() async =>

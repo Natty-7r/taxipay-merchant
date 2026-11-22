@@ -644,12 +644,6 @@ abstract class AppLocalizations {
   /// **'QR code'**
   String get qrCode;
 
-  /// No description provided for @shareQr.
-  ///
-  /// In en, this message translates to:
-  /// **'Share QR to print'**
-  String get shareQr;
-
   /// No description provided for @qrNotReady.
   ///
   /// In en, this message translates to:
@@ -1075,6 +1069,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect'**
   String get connect;
+
+  /// No description provided for @errorNetworkTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection'**
+  String get errorNetworkTitle;
+
+  /// No description provided for @errorTimeoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking too long'**
+  String get errorTimeoutTitle;
+
+  /// No description provided for @errorServerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server problem'**
+  String get errorServerTitle;
+
+  /// No description provided for @errorDeniedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not allowed'**
+  String get errorDeniedTitle;
+
+  /// No description provided for @errorNotFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get errorNotFoundTitle;
+
+  /// No description provided for @errorGenericTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get errorGenericTitle;
+
+  /// No description provided for @errorReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference: {id}'**
+  String errorReference(String id);
+
+  /// No description provided for @qrPoster.
+  ///
+  /// In en, this message translates to:
+  /// **'QR poster'**
+  String get qrPoster;
+
+  /// No description provided for @qrPosterHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Print it and stick it where passengers can scan it.'**
+  String get qrPosterHint;
+
+  /// No description provided for @scanToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to pay your fare'**
+  String get scanToPay;
+
+  /// No description provided for @posterStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan this code with your phone camera'**
+  String get posterStep1;
+
+  /// No description provided for @posterStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose where you get off'**
+  String get posterStep2;
+
+  /// No description provided for @posterStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay with telebirr, M-Pesa or CBE Birr'**
+  String get posterStep3;
+
+  /// No description provided for @operatedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Operated by {name}'**
+  String operatedBy(String name);
+
+  /// No description provided for @formatImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get formatImage;
+
+  /// No description provided for @formatPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF'**
+  String get formatPdf;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @saveToPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveToPhone;
+
+  /// No description provided for @savedFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get savedFile;
+
+  /// No description provided for @makePoster.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a poster to print'**
+  String get makePoster;
+
+  /// No description provided for @sideNumberValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Side no. {number}'**
+  String sideNumberValue(String number);
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
 
 /// Building blocks of the Taxi Pay app design: uppercase section labels over white,
@@ -77,7 +78,7 @@ class SoftCard extends StatelessWidget {
 /// The navy hero card: a label with an icon, a big figure and a caption, with a soft taxi
 /// silhouette in the corner.
 class HeroCard extends StatelessWidget {
-  const HeroCard({super.key, required this.label, required this.value, this.unit, this.caption, this.icon = Icons.payments_outlined, this.footer});
+  const HeroCard({super.key, required this.label, required this.value, this.unit, this.caption, this.icon = AppIcons.paymentsOutlined, this.footer});
 
   final String label;
   final String value;
@@ -112,7 +113,7 @@ class HeroCard extends StatelessWidget {
         Positioned(
           right: 14,
           bottom: 6,
-          child: Icon(Icons.local_taxi, size: 88, color: Colors.white.withValues(alpha: 0.06)),
+          child: Icon(AppIcons.localTaxi, size: 88, color: Colors.white.withValues(alpha: 0.06)),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
@@ -177,18 +178,22 @@ class InitialsAvatar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: size,
-        height: size,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppTheme.yellow,
-          border: Border.all(color: _isDark(context) ? AppTheme.navyLight : AppTheme.navy, width: 2),
-        ),
-        child: Text(initialsOf(name),
-            style: TextStyle(color: AppTheme.navy, fontWeight: FontWeight.w800, fontSize: size * 0.34)),
-      );
+  Widget build(BuildContext context) {
+    final dark = _isDark(context);
+    // Dark: yellow with a navy ring. Light: a soft sky tint with navy initials — no yellow-on-navy.
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: dark ? AppTheme.yellow : const Color(0xFFE3EEF9),
+        border: Border.all(color: dark ? AppTheme.navyLight : const Color(0xFFC5DAEE), width: 2),
+      ),
+      child: Text(initialsOf(name),
+          style: TextStyle(color: dark ? AppTheme.navy : AppTheme.navyLight, fontWeight: FontWeight.w800, fontSize: size * 0.34)),
+    );
+  }
 }
 
 /// A round outlined icon button with an optional badge (the bell).
@@ -327,7 +332,7 @@ class ActivityRow extends StatelessWidget {
                 Text(caption!, style: TextStyle(color: muted, fontSize: 12)),
               ],
             ]),
-          if (onTap != null && amount == null) Icon(Icons.chevron_right, color: muted),
+          if (onTap != null && amount == null) Icon(AppIcons.chevronRight, color: muted),
         ]),
       ),
     );
@@ -424,3 +429,61 @@ class EntityRow extends StatelessWidget {
 
 /// Page padding used by every list screen.
 const pagePadding = EdgeInsets.fromLTRB(20, 8, 20, 32);
+
+/// An error as a card: red-tinted, with an icon, the message, the support reference and a retry button.
+class ErrorCard extends StatelessWidget {
+  const ErrorCard({super.key, required this.title, required this.message, this.reference, this.icon, this.onRetry, this.retryLabel});
+
+  final String title;
+  final String message;
+  final String? reference;
+  final IconData? icon;
+  final VoidCallback? onRetry;
+  final String? retryLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = _isDark(context);
+    final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: dark ? const Color(0xFF2A1215) : const Color(0xFFFEF2F2),
+        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+        border: Border.all(color: dark ? const Color(0xFF5B1F24) : const Color(0xFFFECACA)),
+      ),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: AppTheme.error.withValues(alpha: dark ? 0.25 : 0.12),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon ?? AppIcons.errorOutline, color: AppTheme.error, size: 20),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: dark ? const Color(0xFFFCA5A5) : const Color(0xFF991B1B))),
+            const SizedBox(height: 4),
+            Text(message, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13.5)),
+            if (reference != null) ...[
+              const SizedBox(height: 6),
+              SelectableText(reference!, style: TextStyle(color: muted, fontSize: 12)),
+            ],
+            if (onRetry != null) ...[
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(AppIcons.rotateCw, size: 16),
+                label: Text(retryLabel ?? 'Retry'),
+                style: OutlinedButton.styleFrom(minimumSize: const Size(0, 38), padding: const EdgeInsets.symmetric(horizontal: 14)),
+              ),
+            ],
+          ]),
+        ),
+      ]),
+    );
+  }
+}

@@ -5,6 +5,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/common.dart';
 import '../data/inbox_api.dart';
 import '../data/inbox_models.dart';
+import '../../../core/theme/app_icons.dart';
 
 final inboxProvider = FutureProvider.autoDispose<List<InboxItem>>((ref) => ref.watch(inboxApiProvider).list());
 
@@ -26,7 +27,7 @@ class InboxScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.notifications), actions: [
         IconButton(
-          icon: const Icon(Icons.done_all),
+          icon: const Icon(AppIcons.doneAll),
           tooltip: l10n.markAllRead,
           onPressed: () async {
             if (await runAction(context, api.markAllRead)) await _refresh(ref);
@@ -37,7 +38,7 @@ class InboxScreen extends ConsumerWidget {
         value: ref.watch(inboxProvider),
         onRefresh: () => _refresh(ref),
         builder: (items) => items.isEmpty
-            ? const EmptyView(icon: Icons.notifications_none)
+            ? const EmptyView(icon: AppIcons.notificationsNone)
             : ListView.separated(
                 itemCount: items.length,
                 separatorBuilder: (_, _) => const Divider(height: 1),
@@ -45,11 +46,11 @@ class InboxScreen extends ConsumerWidget {
                   final n = items[i];
                   return ListTile(
                     leading: Icon(switch (n.category) {
-                      'PAYMENT' => Icons.payments,
-                      'OPERATIONS' => Icons.local_taxi,
-                      'ADVERTISEMENT' => Icons.local_offer,
-                      'NOTICE' => Icons.campaign,
-                      _ => Icons.person,
+                      'PAYMENT' => AppIcons.payments,
+                      'OPERATIONS' => AppIcons.localTaxi,
+                      'ADVERTISEMENT' => AppIcons.localOffer,
+                      'NOTICE' => AppIcons.campaign,
+                      _ => AppIcons.person,
                     }, color: n.read ? null : Theme.of(context).colorScheme.primary),
                     title: Text(n.title, style: TextStyle(fontWeight: n.read ? FontWeight.normal : FontWeight.bold)),
                     subtitle: Text('${n.body}\n${dateTime(n.createdAt)}'),

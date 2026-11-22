@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import '../../../core/theme/app_icons.dart';
 
 /// Draws a seat layout front to back; [seatBuilder] renders each seat.
 class SeatGrid extends StatelessWidget {
@@ -11,7 +12,7 @@ class SeatGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       Row(children: [
-        Icon(Icons.airline_seat_recline_normal, color: Theme.of(context).colorScheme.outline),
+        Icon(AppIcons.airlineSeatReclineNormal, color: Theme.of(context).colorScheme.outline),
         const SizedBox(width: 4),
         Text('Driver', style: Theme.of(context).textTheme.bodySmall),
       ]),

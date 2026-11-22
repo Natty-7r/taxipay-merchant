@@ -20,3 +20,6 @@ final seatTemplatesProvider =
 /// Routes a taxi is assigned to.
 final taxiRoutesProvider =
     FutureProvider.autoDispose.family<List<RouteInfo>, int>((ref, taxiId) => ref.watch(fleetApiProvider).routes(taxiId: taxiId));
+
+/// The QR value of an approved taxi.
+final taxiQrProvider = FutureProvider.autoDispose.family<TaxiQr, int>((ref, id) => ref.watch(fleetApiProvider).qr(id));

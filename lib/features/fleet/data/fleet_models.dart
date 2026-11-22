@@ -224,3 +224,22 @@ class RouteInfo {
         taxis: listOf(j['taxis'], AssignedTaxi.fromJson),
       );
 }
+
+/// A taxi's QR code value from the API.
+class TaxiQr {
+  TaxiQr({required this.taxiId, required this.plateNumber, this.sideNumber, required this.value});
+
+  final int taxiId;
+  final String plateNumber;
+  final String? sideNumber;
+
+  /// Encode exactly this text.
+  final String value;
+
+  factory TaxiQr.fromJson(Json j) => TaxiQr(
+        taxiId: (j['taxiId'] as num).toInt(),
+        plateNumber: j['plateNumber'] as String,
+        sideNumber: j['sideNumber'] as String?,
+        value: j['value'] as String,
+      );
+}

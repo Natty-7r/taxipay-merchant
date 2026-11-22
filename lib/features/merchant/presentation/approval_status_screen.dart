@@ -8,6 +8,7 @@ import '../../auth/presentation/session_controller.dart';
 import '../data/merchant_api.dart';
 import '../data/merchant_models.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/app_icons.dart';
 
 /// Gate for businesses that aren't approved: status, reason, documents and resubmission.
 class ApprovalStatusScreen extends ConsumerWidget {
@@ -19,7 +20,7 @@ class ApprovalStatusScreen extends ConsumerWidget {
       builder: (context) => SafeArea(
         child: ListView(shrinkWrap: true, children: [
           for (final t in documentTypes)
-            ListTile(leading: const Icon(Icons.description), title: Text(humanize(t)), onTap: () => Navigator.pop(context, t)),
+            ListTile(leading: const Icon(AppIcons.description), title: Text(humanize(t)), onTap: () => Navigator.pop(context, t)),
         ]),
       ),
     );
@@ -38,20 +39,20 @@ class ApprovalStatusScreen extends ConsumerWidget {
     if (session == null) return const SizedBox.shrink();
     final m = session.merchant;
     final (title, info, icon, color) = switch (m.status) {
-      MerchantStatus.rejected => (l10n.statusRejected, l10n.statusRejectedInfo, Icons.cancel, AppTheme.error),
-      MerchantStatus.suspended => (l10n.statusSuspended, l10n.statusSuspendedInfo, Icons.block, AppTheme.error),
-      _ => (l10n.statusPending, l10n.statusPendingInfo, Icons.hourglass_top, AppTheme.warning),
+      MerchantStatus.rejected => (l10n.statusRejected, l10n.statusRejectedInfo, AppIcons.cancel, AppTheme.error),
+      MerchantStatus.suspended => (l10n.statusSuspended, l10n.statusSuspendedInfo, AppIcons.block, AppTheme.error),
+      _ => (l10n.statusPending, l10n.statusPendingInfo, AppIcons.hourglassTop, AppTheme.warning),
     };
     final canEdit = m.status == MerchantStatus.pending || m.status == MerchantStatus.rejected;
 
     return Scaffold(
       appBar: AppBar(title: Text(m.businessName), actions: [
-        IconButton(icon: const Icon(Icons.logout), tooltip: l10n.logout,
+        IconButton(icon: const Icon(AppIcons.logout), tooltip: l10n.logout,
             onPressed: () => ref.read(sessionProvider.notifier).logout()),
       ]),
       floatingActionButton: canEdit
           ? FloatingActionButton.extended(
-              onPressed: () => _upload(context, ref), icon: const Icon(Icons.upload_file), label: Text(l10n.uploadDocument))
+              onPressed: () => _upload(context, ref), icon: const Icon(AppIcons.uploadFile), label: Text(l10n.uploadDocument))
           : null,
       body: RefreshIndicator(
         onRefresh: () => ref.read(sessionProvider.notifier).reload(),
@@ -81,7 +82,7 @@ class ApprovalStatusScreen extends ConsumerWidget {
           for (final d in m.documents)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.insert_drive_file),
+              leading: const Icon(AppIcons.insertDriveFile),
               title: Text(humanize(d.type)),
               subtitle: Text('${d.fileName} · ${dateTime(d.createdAt)}'),
             ),

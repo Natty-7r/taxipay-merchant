@@ -8,6 +8,7 @@ import '../../../core/widgets/common.dart';
 import '../data/fleet_api.dart';
 import '../data/fleet_models.dart';
 import 'fleet_providers.dart';
+import '../../../core/theme/app_icons.dart';
 
 class RouteDetailScreen extends ConsumerWidget {
   const RouteDetailScreen({super.key, required this.routeId});
@@ -26,7 +27,7 @@ class RouteDetailScreen extends ConsumerWidget {
             ? Padding(padding: const EdgeInsets.all(24), child: Text(context.l10n.empty))
             : ListView(shrinkWrap: true, children: [
                 for (final t in candidates)
-                  ListTile(leading: const Icon(Icons.local_taxi), title: Text(t.title), onTap: () => Navigator.pop(context, t)),
+                  ListTile(leading: const Icon(AppIcons.localTaxi), title: Text(t.title), onTap: () => Navigator.pop(context, t)),
               ]),
       ),
     );
@@ -64,13 +65,13 @@ class RouteDetailScreen extends ConsumerWidget {
             if (r.editable || r.live)
               TextButton.icon(
                 onPressed: () => context.push('/fleet/routes/$routeId/prices'),
-                icon: const Icon(Icons.sell_outlined, size: 18),
+                icon: const Icon(AppIcons.sellOutlined, size: 18),
                 label: Text(r.editable ? l10n.setPrices : l10n.changePrices),
               ),
           ]),
-          if (r.status == 'PENDING') _Notice(icon: Icons.hourglass_top, text: l10n.underReview),
+          if (r.status == 'PENDING') _Notice(icon: AppIcons.hourglassTop, text: l10n.underReview),
           if (r.live && r.pendingFareChanges > 0)
-            _Notice(icon: Icons.hourglass_top, text: l10n.pendingChangesInfo(r.pendingFareChanges)),
+            _Notice(icon: AppIcons.hourglassTop, text: l10n.pendingChangesInfo(r.pendingFareChanges)),
           const SizedBox(height: 4),
           LegPriceList(route: r),
           const Divider(height: 32),
@@ -79,9 +80,9 @@ class RouteDetailScreen extends ConsumerWidget {
           for (final t in r.taxis)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.local_taxi),
+              leading: const Icon(AppIcons.localTaxi),
               title: Text(t.plateNumber),
-              trailing: const Icon(Icons.chevron_right),
+              trailing: const Icon(AppIcons.chevronRight),
               onTap: () => context.push('/fleet/taxis/${t.taxiId}'),
             ),
           const SizedBox(height: 16),
@@ -105,7 +106,7 @@ class RouteDetailScreen extends ConsumerWidget {
             ),
           ],
           if (r.status == 'APPROVED')
-            OutlinedButton.icon(onPressed: () => _assign(context, ref, r), icon: const Icon(Icons.add), label: Text(l10n.assignTaxi)),
+            OutlinedButton.icon(onPressed: () => _assign(context, ref, r), icon: const Icon(AppIcons.add), label: Text(l10n.assignTaxi)),
         ]),
       ),
     );
@@ -158,7 +159,7 @@ class LegPriceList extends StatelessWidget {
           ListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            leading: Icon(s.fullRoute ? Icons.swap_horiz : (s.forward ? Icons.arrow_forward : Icons.arrow_back)),
+            leading: Icon(s.fullRoute ? AppIcons.swapHoriz : (s.forward ? AppIcons.arrowForward : AppIcons.arrowBack)),
             title: Text('${s.fromName} → ${s.toName}'),
             subtitle: route.live && s.proposedFare != null
                 ? Text('${l10n.newPrice(money(s.proposedFare))} · ${l10n.awaitingApproval}',
@@ -303,14 +304,14 @@ class _RoutePricesScreenState extends ConsumerState<RoutePricesScreen> {
               const SizedBox(height: 8),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.event),
+                leading: const Icon(AppIcons.event),
                 title: Text(l10n.applyFrom),
                 subtitle: Text(_effectiveFrom == null
                     ? l10n.applyWhenApproved
                     : MaterialLocalizations.of(context).formatMediumDate(_effectiveFrom!)),
                 trailing: _effectiveFrom == null
-                    ? const Icon(Icons.chevron_right)
-                    : IconButton(icon: const Icon(Icons.close), onPressed: () => setState(() => _effectiveFrom = null)),
+                    ? const Icon(AppIcons.chevronRight)
+                    : IconButton(icon: const Icon(AppIcons.close), onPressed: () => setState(() => _effectiveFrom = null)),
                 onTap: _pickDate,
               ),
             ],
@@ -381,13 +382,13 @@ class _AddRouteScreenState extends ConsumerState<AddRouteScreen> {
                 Expanded(child: TextFormField(controller: _stops[i], decoration: InputDecoration(labelText: l10n.stopName),
                     validator: (v) => requiredValidator(context, v))),
                 if (_stops.length > 2)
-                  IconButton(icon: const Icon(Icons.remove_circle_outline),
+                  IconButton(icon: const Icon(AppIcons.removeCircleOutline),
                       onPressed: () => setState(() => _stops.removeAt(i).dispose())),
               ]),
             ),
           TextButton.icon(
             onPressed: () => setState(() => _stops.add(TextEditingController())),
-            icon: const Icon(Icons.add),
+            icon: const Icon(AppIcons.add),
             label: Text(l10n.addStop),
           ),
           const SizedBox(height: 8),

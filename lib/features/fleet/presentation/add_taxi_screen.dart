@@ -108,7 +108,7 @@ class _AddTaxiScreenState extends ConsumerState<AddTaxiScreen> {
                     onSelected: (_) => setState(() => _template = t),
                   ),
               ]),
-            AsyncError(:final error) => Text('$error'),
+            AsyncError(:final error) => AppErrorCard(error: error),
             _ => const LinearProgressIndicator(),
           },
           if (_template != null) ...[

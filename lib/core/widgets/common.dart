@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../theme/app_icons.dart';
 import '../theme/app_theme.dart';
+import 'ui.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../network/api_exception.dart';
@@ -11,12 +13,49 @@ extension L10nX on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
 }
 
-/// Shows an API error (with its trace id for support) as a snackbar.
+/// Shows a failed action as a floating error card.
 void showError(BuildContext context, Object error) {
-  final message = error is ApiException ? error.userMessage : '$error';
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(content: Text(message), behavior: SnackBarBehavior.floating));
+    ..showSnackBar(SnackBar(
+      content: AppErrorCard(error: error),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 6),
+    ));
+}
+
+/// [ErrorCard] for any error: picks the title and icon from the kind of failure.
+class AppErrorCard extends StatelessWidget {
+  const AppErrorCard({super.key, required this.error, this.onRetry});
+
+  final Object error;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final api = error is ApiException ? error as ApiException : null;
+    final status = api?.status ?? 0;
+    final (title, icon) = switch (api) {
+      _ when api?.code == 'NETWORK' => (l10n.errorNetworkTitle, AppIcons.wifiOff),
+      _ when api?.code == 'TIMEOUT' => (l10n.errorTimeoutTitle, AppIcons.hourglassTop),
+      _ when status == 403 => (l10n.errorDeniedTitle, AppIcons.shieldAlert),
+      _ when status == 404 => (l10n.errorNotFoundTitle, AppIcons.errorOutline),
+      _ when status >= 500 => (l10n.errorServerTitle, AppIcons.serverCrash),
+      _ => (l10n.errorGenericTitle, AppIcons.errorOutline),
+    };
+    return ErrorCard(
+      title: title,
+      message: api?.userMessage ?? '$error',
+      reference: api?.traceId == null ? null : l10n.errorReference(api!.traceId!),
+      icon: icon,
+      onRetry: onRetry,
+      retryLabel: l10n.retry,
+    );
+  }
 }
 
 void showInfo(BuildContext context, String message) {
@@ -54,6 +93,7 @@ class AsyncBody<T> extends StatelessWidget {
   }
 }
 
+/// A full-screen error state: the error card, still pull-to-refreshable.
 class ErrorView extends StatelessWidget {
   const ErrorView({super.key, required this.error, required this.onRetry});
 
@@ -61,31 +101,17 @@ class ErrorView extends StatelessWidget {
   final Future<void> Function() onRetry;
 
   @override
-  Widget build(BuildContext context) {
-    final api = error is ApiException ? error as ApiException : null;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(api?.isNetwork == true ? Icons.wifi_off : Icons.error_outline, size: 48),
-          const SizedBox(height: 12),
-          Text(api?.userMessage ?? '$error', textAlign: TextAlign.center),
-          if (api?.traceId != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text('Ref ${api!.traceId}', style: Theme.of(context).textTheme.bodySmall),
-            ),
-          const SizedBox(height: 16),
-          OutlinedButton(onPressed: onRetry, child: Text(context.l10n.retry)),
+  Widget build(BuildContext context) => RefreshIndicator(
+        onRefresh: onRetry,
+        child: ListView(padding: const EdgeInsets.fromLTRB(20, 24, 20, 24), children: [
+          AppErrorCard(error: error, onRetry: onRetry),
         ]),
-      ),
-    );
-  }
+      );
 }
 
 /// A scrollable empty state (so pull-to-refresh still works).
 class EmptyView extends StatelessWidget {
-  const EmptyView({super.key, this.message, this.icon = Icons.inbox_outlined});
+  const EmptyView({super.key, this.message, this.icon = AppIcons.inboxOutlined});
 
   final String? message;
   final IconData icon;

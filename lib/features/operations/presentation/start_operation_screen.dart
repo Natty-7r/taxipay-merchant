@@ -7,6 +7,7 @@ import '../../fleet/data/fleet_models.dart';
 import '../../fleet/presentation/fleet_providers.dart';
 import '../data/operations_api.dart';
 import 'operations_screen.dart';
+import '../../../core/theme/app_icons.dart';
 
 /// Taxi + one of the routes it is assigned to + driver → operation with the first trip boarding.
 class StartOperationScreen extends ConsumerStatefulWidget {
@@ -76,7 +77,7 @@ class _StartOperationScreenState extends ConsumerState<StartOperationScreen> {
         const SizedBox(height: 24),
         FilledButton.icon(
           onPressed: _busy || _taxi == null || _route == null ? null : _start,
-          icon: const Icon(Icons.play_arrow),
+          icon: const Icon(AppIcons.playArrow),
           label: Text(l10n.start),
         ),
       ]),

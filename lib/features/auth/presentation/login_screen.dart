@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../core/widgets/common.dart';
 import 'session_controller.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/app_icons.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -52,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextFormField(
                   key: const Key('login.identifier'),
                   controller: _identifier,
-                  decoration: InputDecoration(labelText: l10n.phoneOrEmail, prefixIcon: const Icon(Icons.person)),
+                  decoration: InputDecoration(labelText: l10n.phoneOrEmail, prefixIcon: const Icon(AppIcons.person)),
                   keyboardType: TextInputType.emailAddress,
                   autofillHints: const [AutofillHints.username],
                   validator: (v) => requiredValidator(context, v),
@@ -64,9 +65,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   obscureText: _obscure,
                   decoration: InputDecoration(
                     labelText: l10n.password,
-                    prefixIcon: const Icon(Icons.lock),
+                    prefixIcon: const Icon(AppIcons.lock),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                      icon: Icon(_obscure ? AppIcons.visibility : AppIcons.visibilityOff),
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
                   ),

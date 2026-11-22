@@ -10,6 +10,7 @@ import '../../features/auth/presentation/splash_screen.dart';
 import '../../features/fleet/presentation/add_driver_screen.dart';
 import '../../features/fleet/presentation/add_taxi_screen.dart';
 import '../../features/fleet/presentation/fleet_screen.dart';
+import '../../features/fleet/presentation/qr_poster_screen.dart';
 import '../../features/fleet/presentation/route_screens.dart';
 import '../../features/fleet/presentation/taxi_detail_screen.dart';
 import '../../features/inbox/presentation/inbox_screen.dart';
@@ -22,6 +23,7 @@ import '../widgets/app_bottom_bar.dart';
 import '../../features/payments/presentation/payments_screen.dart';
 import '../../features/settings/presentation/more_screen.dart';
 import '../widgets/common.dart';
+import '../theme/app_icons.dart';
 
 /// Where a session is allowed to be. Pure, so it is unit-tested on its own.
 String? redirectFor(AsyncValue<Session?> session, String location) {
@@ -63,7 +65,13 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(routes: [
             GoRoute(path: '/fleet', builder: (_, _) => const FleetScreen(), routes: [
               GoRoute(path: 'taxis/new', builder: (_, _) => const AddTaxiScreen()),
-              GoRoute(path: 'taxis/:id', builder: (_, s) => TaxiDetailScreen(taxiId: int.parse(s.pathParameters['id']!))),
+              GoRoute(
+                path: 'taxis/:id',
+                builder: (_, s) => TaxiDetailScreen(taxiId: int.parse(s.pathParameters['id']!)),
+                routes: [
+                  GoRoute(path: 'qr', builder: (_, s) => QrPosterScreen(taxiId: int.parse(s.pathParameters['id']!))),
+                ],
+              ),
               GoRoute(path: 'drivers/new', builder: (_, _) => const AddDriverScreen()),
               GoRoute(path: 'routes/new', builder: (_, _) => const AddRouteScreen()),
               GoRoute(
@@ -102,12 +110,12 @@ class _HomeShell extends StatelessWidget {
         onSelect: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
         // Display order: Home, Fleet, [Operate], Payments, More — branch indices stay as declared.
         items: [
-          BottomBarItem(branch: 0, icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: l10n.tabHome),
-          BottomBarItem(branch: 2, icon: Icons.garage_outlined, activeIcon: Icons.garage_rounded, label: l10n.tabFleet),
-          BottomBarItem(branch: 3, icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long, label: l10n.tabPayments),
-          BottomBarItem(branch: 4, icon: Icons.person_outline, activeIcon: Icons.person, label: l10n.tabMore),
+          BottomBarItem(branch: 0, icon: AppIcons.homeOutlined, activeIcon: AppIcons.homeRounded, label: l10n.tabHome),
+          BottomBarItem(branch: 2, icon: AppIcons.garageOutlined, activeIcon: AppIcons.garageRounded, label: l10n.tabFleet),
+          BottomBarItem(branch: 3, icon: AppIcons.receiptLongOutlined, activeIcon: AppIcons.receiptLong, label: l10n.tabPayments),
+          BottomBarItem(branch: 4, icon: AppIcons.personOutline, activeIcon: AppIcons.person, label: l10n.tabMore),
         ],
-        center: BottomBarItem(branch: 1, icon: Icons.local_taxi, activeIcon: Icons.local_taxi, label: l10n.tabOperate),
+        center: BottomBarItem(branch: 1, icon: AppIcons.localTaxi, activeIcon: AppIcons.localTaxi, label: l10n.tabOperate),
       ),
     );
   }

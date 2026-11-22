@@ -284,9 +284,6 @@ class AppLocalizationsAm extends AppLocalizations {
   String get qrCode => 'QR ኮድ';
 
   @override
-  String get shareQr => 'ለማተም QR አጋራ';
-
-  @override
   String get qrNotReady => 'QR ኮዱ ታክሲው ሲጸድቅ ይገኛል።';
 
   @override
@@ -513,4 +510,73 @@ class AppLocalizationsAm extends AppLocalizations {
 
   @override
   String get connect => 'አገናኝ';
+
+  @override
+  String get errorNetworkTitle => 'ግንኙነት የለም';
+
+  @override
+  String get errorTimeoutTitle => 'ጊዜ ወስዷል';
+
+  @override
+  String get errorServerTitle => 'የአገልጋይ ችግር';
+
+  @override
+  String get errorDeniedTitle => 'አልተፈቀደም';
+
+  @override
+  String get errorNotFoundTitle => 'አልተገኘም';
+
+  @override
+  String get errorGenericTitle => 'ችግር ተፈጥሯል';
+
+  @override
+  String errorReference(String id) {
+    return 'ማጣቀሻ: $id';
+  }
+
+  @override
+  String get qrPoster => 'የQR ፖስተር';
+
+  @override
+  String get qrPosterHint => 'አትመው ተሳፋሪዎች በሚያዩበት ቦታ ይለጥፉት።';
+
+  @override
+  String get scanToPay => 'ታሪፍዎን ለመክፈል ይቃኙ';
+
+  @override
+  String get posterStep1 => 'ይህን ኮድ በስልክዎ ካሜራ ይቃኙ';
+
+  @override
+  String get posterStep2 => 'የሚወርዱበትን ቦታ ይምረጡ';
+
+  @override
+  String get posterStep3 => 'በቴሌብር፣ በኤም-ፔሳ ወይም በሲቢኢ ብር ይክፈሉ';
+
+  @override
+  String operatedBy(String name) {
+    return 'አስተዳዳሪ፦ $name';
+  }
+
+  @override
+  String get formatImage => 'ምስል';
+
+  @override
+  String get formatPdf => 'PDF';
+
+  @override
+  String get share => 'አጋራ';
+
+  @override
+  String get saveToPhone => 'አስቀምጥ';
+
+  @override
+  String get savedFile => 'ተቀምጧል';
+
+  @override
+  String get makePoster => 'ለማተም ፖስተር ያዘጋጁ';
+
+  @override
+  String sideNumberValue(String number) {
+    return 'የጎን ቁጥር $number';
+  }
 }

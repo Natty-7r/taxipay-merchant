@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../core/widgets/common.dart';
 import 'session_controller.dart';
+import '../../../core/theme/app_icons.dart';
 
 /// Shown when the account still has an initial password (`mustChangePassword`).
 class ChangePasswordScreen extends ConsumerStatefulWidget {
@@ -37,7 +38,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.changePasswordTitle), actions: [
-        IconButton(icon: const Icon(Icons.logout), onPressed: () => ref.read(sessionProvider.notifier).logout()),
+        IconButton(icon: const Icon(AppIcons.logout), onPressed: () => ref.read(sessionProvider.notifier).logout()),
       ]),
       body: Form(
         key: _form,

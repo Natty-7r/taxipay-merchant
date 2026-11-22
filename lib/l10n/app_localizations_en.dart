@@ -286,9 +286,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get qrCode => 'QR code';
 
   @override
-  String get shareQr => 'Share QR to print';
-
-  @override
   String get qrNotReady =>
       'The QR code is available once the taxi is approved.';
 
@@ -519,4 +516,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connect => 'Connect';
+
+  @override
+  String get errorNetworkTitle => 'No connection';
+
+  @override
+  String get errorTimeoutTitle => 'Taking too long';
+
+  @override
+  String get errorServerTitle => 'Server problem';
+
+  @override
+  String get errorDeniedTitle => 'Not allowed';
+
+  @override
+  String get errorNotFoundTitle => 'Not found';
+
+  @override
+  String get errorGenericTitle => 'Something went wrong';
+
+  @override
+  String errorReference(String id) {
+    return 'Reference: $id';
+  }
+
+  @override
+  String get qrPoster => 'QR poster';
+
+  @override
+  String get qrPosterHint =>
+      'Print it and stick it where passengers can scan it.';
+
+  @override
+  String get scanToPay => 'Scan to pay your fare';
+
+  @override
+  String get posterStep1 => 'Scan this code with your phone camera';
+
+  @override
+  String get posterStep2 => 'Choose where you get off';
+
+  @override
+  String get posterStep3 => 'Pay with telebirr, M-Pesa or CBE Birr';
+
+  @override
+  String operatedBy(String name) {
+    return 'Operated by $name';
+  }
+
+  @override
+  String get formatImage => 'Image';
+
+  @override
+  String get formatPdf => 'PDF';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get saveToPhone => 'Save';
+
+  @override
+  String get savedFile => 'Saved';
+
+  @override
+  String get makePoster => 'Make a poster to print';
+
+  @override
+  String sideNumberValue(String number) {
+    return 'Side no. $number';
+  }
 }

@@ -12,6 +12,7 @@ import '../../operations/presentation/operations_screen.dart';
 import '../../payments/presentation/payments_screen.dart';
 import '../data/merchant_api.dart';
 import '../data/merchant_models.dart';
+import '../../../core/theme/app_icons.dart';
 
 final dashboardProvider = FutureProvider.autoDispose<Dashboard>((ref) => ref.watch(merchantApiProvider).dashboard());
 
@@ -48,7 +49,7 @@ class DashboardScreen extends ConsumerWidget {
               title: l10n.hello(firstName),
               subtitle: session?.merchant.businessName ?? '',
               trailing: CircleIconButton(
-                icon: Icons.notifications_none_rounded,
+                icon: AppIcons.notificationsNoneRounded,
                 badge: unread,
                 tooltip: l10n.notifications,
                 onPressed: () => context.push('/more/notifications'),
@@ -71,34 +72,34 @@ class DashboardScreen extends ConsumerWidget {
                 onTap: () => context.go('/fleet'),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 child: Row(children: [
-                  const Icon(Icons.hourglass_top_rounded, color: AppTheme.warning),
+                  const Icon(AppIcons.hourglassTopRounded, color: AppTheme.warning),
                   const SizedBox(width: 12),
                   Expanded(child: Text('${d.pendingTaxis} · ${l10n.pendingTaxis}', style: const TextStyle(fontWeight: FontWeight.w700))),
-                  const Icon(Icons.chevron_right),
+                  const Icon(AppIcons.chevronRight),
                 ]),
               ),
             ],
             SectionLabel(l10n.yourFleet),
             TwoUp(
-              MetricTile(icon: Icons.local_taxi_outlined, value: '${d.totalTaxis}', label: l10n.taxis, onTap: () => context.go('/fleet')),
-              MetricTile(icon: Icons.badge_outlined, value: '${d.drivers}', label: l10n.drivers, onTap: () => context.go('/fleet')),
+              MetricTile(icon: AppIcons.localTaxiOutlined, value: '${d.totalTaxis}', label: l10n.taxis, onTap: () => context.go('/fleet')),
+              MetricTile(icon: AppIcons.badgeOutlined, value: '${d.drivers}', label: l10n.drivers, onTap: () => context.go('/fleet')),
             ),
             const SizedBox(height: 12),
             TwoUp(
-              MetricTile(icon: Icons.alt_route, value: '${d.approvedRoutes}', label: l10n.approvedRoutes, onTap: () => context.go('/fleet')),
-              MetricTile(icon: Icons.groups_outlined, value: '${d.passengers}', label: l10n.passengers, onTap: () => context.go('/payments')),
+              MetricTile(icon: AppIcons.altRoute, value: '${d.approvedRoutes}', label: l10n.approvedRoutes, onTap: () => context.go('/fleet')),
+              MetricTile(icon: AppIcons.groupsOutlined, value: '${d.passengers}', label: l10n.passengers, onTap: () => context.go('/payments')),
             ),
             SectionLabel(l10n.onTheRoad, action: l10n.start, onAction: () => context.push('/operate/start')),
             switch (operations) {
               AsyncData(:final value) when value.isEmpty => SoftCard(
                   child: Row(children: [
-                    const IconTile(Icons.local_taxi),
+                    const IconTile(AppIcons.localTaxi),
                     const SizedBox(width: 14),
                     Expanded(child: Text(l10n.noActiveOperations)),
                   ]),
                 ),
               AsyncData(:final value) => ListCard(children: [for (final op in value) OperationTile(op)]),
-              AsyncError(:final error) => Text('$error'),
+              AsyncError(:final error) => AppErrorCard(error: error, onRetry: () => ref.invalidate(activeOperationsProvider)),
               _ => const LinearProgressIndicator(),
             },
             SectionLabel(l10n.recentPayments, action: l10n.seeAll, onAction: () => context.go('/payments')),
@@ -107,7 +108,7 @@ class DashboardScreen extends ConsumerWidget {
               AsyncData(:final value) => ListCard(children: [
                   for (var i = 0; i < value.length && i < 5; i++) PaymentRow(value[i], highlight: i == 0),
                 ]),
-              AsyncError(:final error) => Text('$error'),
+              AsyncError(:final error) => AppErrorCard(error: error, onRetry: () => ref.invalidate(paymentsProvider(null))),
               _ => const LinearProgressIndicator(),
             },
           ]),

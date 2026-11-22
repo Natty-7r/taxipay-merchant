@@ -7,6 +7,7 @@ import '../../../core/widgets/common.dart';
 import '../../../core/widgets/ui.dart';
 import '../data/payment_models.dart';
 import '../data/payments_api.dart';
+import '../../../core/theme/app_icons.dart';
 
 final paymentsProvider = FutureProvider.autoDispose.family<List<PaymentItem>, String?>(
     (ref, status) => ref.watch(paymentsApiProvider).list(status: status));
@@ -50,7 +51,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> {
         value: ref.watch(paymentsProvider(_status)),
         onRefresh: () => ref.refresh(paymentsProvider(_status).future),
         builder: (items) => items.isEmpty
-            ? EmptyView(icon: Icons.receipt_long, message: l10n.noPaymentsYet)
+            ? EmptyView(icon: AppIcons.receiptLong, message: l10n.noPaymentsYet)
             : ListView(padding: pagePadding, children: [
                 ListCard(children: [for (var i = 0; i < items.length; i++) PaymentRow(items[i], highlight: i == 0)]),
               ]),
