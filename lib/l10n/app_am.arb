@@ -196,5 +196,6 @@
   "editTaxi": "ታክሲ አስተካክል",
   "editRoute": "መስመር አስተካክል",
   "editApprovedTaxiHint": "ታርጋ፣ ዓይነት፣ አምራች፣ ሞዴል ወይም ዓመት መቀየር ታክሲውን ለግምገማ ይመልሰዋል።",
-  "qrCodeLabel": "ኮድ፦ {code}"
+  "qrCodeLabel": "ኮድ፦ {code}",
+  "open": "ክፈት"
 }

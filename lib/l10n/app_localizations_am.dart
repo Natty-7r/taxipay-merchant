@@ -628,4 +628,7 @@ class AppLocalizationsAm extends AppLocalizations {
   String qrCodeLabel(String code) {
     return 'ኮድ፦ $code';
   }
+
+  @override
+  String get open => 'ክፈት';
 }

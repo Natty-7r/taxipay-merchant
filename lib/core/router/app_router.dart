@@ -21,6 +21,10 @@ import '../../features/merchant/presentation/dashboard_screen.dart';
 import '../../features/operations/presentation/live_taxi_screen.dart';
 import '../../features/operations/presentation/operations_screen.dart';
 import '../../features/operations/presentation/start_operation_screen.dart';
+import '../live/live_banner.dart';
+import '../live/live_events.dart';
+import '../live/live_refresh.dart';
+import '../push/push_service.dart';
 import '../widgets/app_bottom_bar.dart';
 import '../../features/payments/presentation/payments_screen.dart';
 import '../../features/settings/presentation/more_screen.dart';
@@ -100,16 +104,28 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-class _HomeShell extends StatelessWidget {
+class _HomeShell extends ConsumerWidget {
   const _HomeShell({required this.shell});
 
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    // Something happened (a payment, a review): reload what it touches and say so.
+    ref.listen(liveEventsProvider, (_, event) {
+      if (event == null) return;
+      refreshFor(ref, event.event);
+      showLiveBanner(context, event);
+    });
+    // A tapped push notification waiting for the app to be ready.
+    ref.listen(pendingLinkProvider, (_, link) {
+      if (link == null) return;
+      ref.read(pendingLinkProvider.notifier).take();
+      openLink(context, link);
+    });
     return Scaffold(
-      body: shell,
+      body: LiveEventsLifecycle(child: shell),
       bottomNavigationBar: AppBottomBar(
         currentIndex: shell.currentIndex,
         onSelect: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),

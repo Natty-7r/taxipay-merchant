@@ -7,10 +7,12 @@ import 'package:material_ui/material_ui.dart';
 import 'app.dart';
 import 'core/config/env.dart';
 import 'core/logging/app_logger.dart';
+import 'core/push/push_service.dart';
 
 void main() {
-  runZonedGuarded(() {
+  runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await PushService.initialize();
     FlutterError.onError = (details) {
       appLogger.e('Flutter error', error: details.exception, stackTrace: details.stack);
       if (kDebugMode) FlutterError.presentError(details);

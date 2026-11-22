@@ -59,3 +59,24 @@ flutter test
 - **Router:** the redirect rules, including the approval gate.
 - **Model mappers.**
 - **Login screen:** a widget test, including Amharic.
+
+## Live updates and push notifications
+
+- **While the app is open** it keeps `GET /api/events` (server-sent events) connected. When a
+  passenger pays, a route or taxi is reviewed, etc., a banner appears at the top with **Open**, and
+  the screens that event touches reload (dashboard, live seat map, payments, routes…).
+- **When the app is closed or in the background**, the API sends the same notification as a push
+  (Firebase Cloud Messaging). Tapping it opens the right screen (e.g. the taxi's live seat map).
+
+Push needs a Firebase project:
+
+1. Firebase console → add an Android app with package `com.taxipay.taxipay_merchant` (the `applicationId` in `android/app/build.gradle.kts`).
+2. Build the app with its values:
+   ```bash
+   flutter run --dart-define=FIREBASE_API_KEY=... --dart-define=FIREBASE_APP_ID=... \
+     --dart-define=FIREBASE_SENDER_ID=... --dart-define=FIREBASE_PROJECT_ID=...
+   ```
+3. Give the API a service-account key: Project settings → Service accounts → Generate new private
+   key, then `FCM_SERVICE_ACCOUNT_FILE=/path/key.json` in the API's `.env`.
+
+Without these the app still gets live updates while open; pushes are only logged by the API.

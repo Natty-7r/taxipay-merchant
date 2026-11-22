@@ -1279,6 +1279,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code: {code}'**
   String qrCodeLabel(String code);
+
+  /// No description provided for @open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
 }
 
 class _AppLocalizationsDelegate

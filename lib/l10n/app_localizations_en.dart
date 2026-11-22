@@ -635,4 +635,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String qrCodeLabel(String code) {
     return 'Code: $code';
   }
+
+  @override
+  String get open => 'Open';
 }

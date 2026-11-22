@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -83,6 +84,19 @@ class ApiClient {
       appLogger.w('API ${e.requestOptions.method} ${e.requestOptions.path} failed: $error');
       throw error;
     }
+  }
+
+  /// Opens a server-sent event stream and yields its text as it arrives (auth and token refresh
+  /// as for any call). Cancel [cancelToken] to close it.
+  Future<Stream<String>> openEventStream(String path, CancelToken cancelToken) async {
+    final res = await _dio.get<ResponseBody>(path,
+        cancelToken: cancelToken,
+        options: Options(
+          responseType: ResponseType.stream,
+          receiveTimeout: Duration.zero,
+          headers: {'Accept': 'text/event-stream', 'Cache-Control': 'no-cache'},
+        ));
+    return res.data!.stream.cast<List<int>>().transform(const Utf8Decoder(allowMalformed: true));
   }
 
   // ------------------------------------------------------------ interceptors
