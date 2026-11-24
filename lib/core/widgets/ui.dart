@@ -96,7 +96,7 @@ class HeroCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF0B2A44), AppTheme.navy],
+          colors: AppTheme.heroGradient,
         ),
         boxShadow: [BoxShadow(color: AppTheme.navy.withValues(alpha: 0.10), blurRadius: 12, offset: const Offset(0, 4))],
       ),
@@ -187,11 +187,11 @@ class InitialsAvatar extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: dark ? AppTheme.yellow : const Color(0xFFE3EEF9),
-        border: Border.all(color: dark ? AppTheme.navyLight : const Color(0xFFC5DAEE), width: 2),
+        color: dark ? AppTheme.yellow : AppTheme.blueSoft,
+        border: Border.all(color: dark ? AppTheme.navyLight : AppTheme.blueLine, width: 2),
       ),
       child: Text(initialsOf(name),
-          style: TextStyle(color: dark ? AppTheme.navy : AppTheme.navyLight, fontWeight: FontWeight.w800, fontSize: size * 0.34)),
+          style: TextStyle(color: dark ? AppTheme.navy : AppTheme.blue, fontWeight: FontWeight.w800, fontSize: size * 0.34)),
     );
   }
 }

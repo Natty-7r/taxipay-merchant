@@ -1,24 +1,34 @@
 import 'package:material_ui/material_ui.dart';
 
 /// Taxi Pay brand (taxi-pay/brand/BRAND.md): taxi yellow for actions and key figures,
-/// deep navy for text and navigation, white / soft backgrounds everywhere else.
+/// deep navy for text and navigation, taxi blue (the minibus in the logo) for info, links and
+/// focus, white / soft backgrounds everywhere else.
 class AppTheme {
   AppTheme._();
 
-  static const yellow = Color(0xFFFEBA07);
-  static const navy = Color(0xFF011D33);
+  static const yellow = Color(0xFFFFC400);
+  static const navy = Color(0xFF022347);
   static const white = Color(0xFFFFFFFF);
   static const softBackground = Color(0xFFF8FAFC);
 
   /// Warm off-white screen background of the app design.
   static const canvas = Color(0xFFFAF9F6);
   static const cardBorder = Color(0xFFECEAE5);
-  static const darkCanvas = Color(0xFF07131F);
-  static const darkCard = Color(0xFF0F1F2E);
-  static const darkBorder = Color(0xFF1C3044);
-  static const lightYellow = Color(0xFFFFF4CC);
-  static const darkYellow = Color(0xFFD99A00);
-  static const navyLight = Color(0xFF163B55);
+  static const darkCanvas = Color(0xFF041427);
+  static const darkCard = Color(0xFF0B2038);
+  static const darkBorder = Color(0xFF1A3350);
+  static const lightYellow = Color(0xFFFFF6CC);
+  static const darkYellow = Color(0xFFE0AC00);
+  static const navyLight = Color(0xFF1A3D63);
+
+  /// Taxi blue: info, links, focus. Never the main call to action — that stays yellow.
+  static const blue = Color(0xFF0077EE);
+  static const blueSoft = Color(0xFFE6F1FE);
+  static const blueLine = Color(0xFFBFDCFC);
+  static const darkBlue = Color(0xFF4DA3FF);
+
+  /// Brand gradient for hero cards and receipt headers: taxi blue → navy.
+  static const heroGradient = [Color(0xFF0B4A8F), navy];
   static const border = Color(0xFFE2E8F0);
   static const textGray = Color(0xFF64748B);
   static const inactiveIcon = Color(0xFF94A3B8);
@@ -53,9 +63,9 @@ class AppTheme {
       onPrimary: navy,
       primaryContainer: dark ? const Color(0xFF3A2E00) : lightYellow,
       onPrimaryContainer: dark ? const Color(0xFFFFE08A) : navy,
-      secondary: dark ? const Color(0xFF7CB3DD) : navyLight,
+      secondary: dark ? darkBlue : blue,
       onSecondary: white,
-      secondaryContainer: dark ? navyLight : const Color(0xFFE6EEF5),
+      secondaryContainer: dark ? navyLight : blueSoft,
       onSecondaryContainer: dark ? white : navy,
       tertiary: success,
       onTertiary: white,
@@ -66,9 +76,9 @@ class AppTheme {
       onSurfaceVariant: dark ? inactiveIcon : textGray,
       surfaceContainerLowest: surface,
       surfaceContainerLow: surface,
-      surfaceContainer: dark ? const Color(0xFF132638) : const Color(0xFFF4F2EE),
-      surfaceContainerHigh: dark ? const Color(0xFF162B3F) : const Color(0xFFF0EEE9),
-      surfaceContainerHighest: dark ? const Color(0xFF1B3349) : const Color(0xFFEAE8E3),
+      surfaceContainer: dark ? const Color(0xFF0F2A47) : const Color(0xFFF4F2EE),
+      surfaceContainerHigh: dark ? const Color(0xFF12304F) : const Color(0xFFF0EEE9),
+      surfaceContainerHighest: dark ? const Color(0xFF173A5C) : const Color(0xFFEAE8E3),
       outline: outline,
       outlineVariant: outline,
       inverseSurface: dark ? white : navy,
@@ -150,7 +160,7 @@ class AppTheme {
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(radius), borderSide: BorderSide(color: outline)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),
-          borderSide: const BorderSide(color: yellow, width: 1.8),
+          borderSide: BorderSide(color: dark ? darkBlue : blue, width: 1.8),
         ),
         floatingLabelStyle: text.bodyLarge?.copyWith(color: onSurface, fontWeight: FontWeight.w600),
       ),
