@@ -14,21 +14,21 @@ class BottomBarItem {
 /// White bottom bar of the app design: yellow active tab, grey inactive ones, and a raised
 /// yellow circle in the middle for the main action.
 class AppBottomBar extends StatelessWidget {
-  const AppBottomBar({super.key, required this.currentIndex, required this.onSelect, required this.items, required this.center});
+  const AppBottomBar({super.key, required this.currentIndex, required this.onSelect, required this.items, this.center});
 
   final int currentIndex;
   final ValueChanged<int> onSelect;
 
-  /// Four items: two either side of [center].
+  /// Four items: two either side of [center]. Without a center (driver mode), just the items.
   final List<BottomBarItem> items;
-  final BottomBarItem center;
+  final BottomBarItem? center;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final dark = Theme.of(context).brightness == Brightness.dark;
+    final center = this.center;
     final half = items.length ~/ 2;
-    final centerActive = currentIndex == center.branch;
 
     Widget tab(BottomBarItem item) {
       final active = item.branch == currentIndex;
@@ -65,17 +65,20 @@ class AppBottomBar extends StatelessWidget {
             border: Border(top: BorderSide(color: scheme.outline)),
             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: dark ? 0.3 : 0.04), blurRadius: 12, offset: const Offset(0, -2))],
           ),
-          child: Row(children: [
-            ...items.take(half).map(tab),
-            const SizedBox(width: 76),
-            ...items.skip(half).map(tab),
-          ]),
+          child: Row(children: center == null
+              ? [...items.map(tab)]
+              : [
+                  ...items.take(half).map(tab),
+                  const SizedBox(width: 76),
+                  ...items.skip(half).map(tab),
+                ]),
         ),
+        if (center != null)
         Positioned(
           top: 0,
           child: Semantics(
             button: true,
-            selected: centerActive,
+            selected: currentIndex == center.branch,
             label: center.label,
             child: GestureDetector(
               onTap: () => onSelect(center.branch),

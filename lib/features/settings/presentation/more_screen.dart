@@ -62,12 +62,35 @@ class MoreScreen extends ConsumerWidget {
                 Text(me.fullName, style: Theme.of(context).textTheme.titleMedium),
                 Text(me.phoneNumber, style: TextStyle(color: muted)),
                 const SizedBox(height: 6),
-                Text('${m.businessName} · ${humanize(m.businessType)}', style: const TextStyle(fontWeight: FontWeight.w600)),
-                Text('TIN ${m.tin}', style: TextStyle(color: muted, fontSize: 12.5)),
+                if (m == null)
+                  Text('${l10n.driverRole} · ${session.businessName}', style: const TextStyle(fontWeight: FontWeight.w600))
+                else ...[
+                  Text('${m.businessName} · ${humanize(m.businessType)}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                  if (m.tin != null) Text('TIN ${m.tin}', style: TextStyle(color: muted, fontSize: 12.5)),
+                ],
               ]),
             ),
           ]),
         ),
+        if (m != null) ...[
+          SectionLabel(l10n.businessSection),
+          ListCard(children: [
+            ListTile(
+              leading: const Icon(AppIcons.storefront),
+              title: Text(l10n.businessDetails),
+              subtitle: Text(humanize(m.status.name.toUpperCase())),
+              trailing: const Icon(AppIcons.chevronRight),
+              onTap: () => context.push('/setup/business'),
+            ),
+            ListTile(
+              leading: const Icon(AppIcons.accountBalanceWalletOutlined),
+              title: Text(l10n.settlementSection),
+              subtitle: Text(m.payout == null ? l10n.notSet : '${m.payout!.provider} · ${m.payout!.accountNumber}'),
+              trailing: const Icon(AppIcons.chevronRight),
+              onTap: () => context.push('/setup/payout'),
+            ),
+          ]),
+        ],
         SectionLabel(l10n.account),
         ListCard(children: [
           ListTile(

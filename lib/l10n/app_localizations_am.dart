@@ -31,7 +31,7 @@ class AppLocalizationsAm extends AppLocalizations {
   String get noAccount => 'አዲስ ነዎት? ድርጅትዎን ያስመዝግቡ';
 
   @override
-  String get registerTitle => 'ድርጅትዎን ያስመዝግቡ';
+  String get registerTitle => 'መለያ ይፍጠሩ';
 
   @override
   String get ownerSection => 'ባለቤት';
@@ -705,5 +705,160 @@ class AppLocalizationsAm extends AppLocalizations {
   @override
   String fromStopReturn(String stop) {
     return 'ከ$stop (መመለሻ)';
+  }
+
+  @override
+  String get registerIntro =>
+      'መለያዎን ይፍጠሩ። ከገቡ በኋላ ንግድዎን እና የክፍያ መቀበያ ሂሳብዎን ያዘጋጃሉ።';
+
+  @override
+  String get setupBusiness => 'ንግድዎን ያዘጋጁ';
+
+  @override
+  String get setupBusinessHint => 'ታክሲ፣ መስመር እና ሹፌር ከመጨመርዎ በፊት ያስፈልጋል።';
+
+  @override
+  String get applicationRejectedHint => 'የንግድ መረጃዎን አስተካክለው እንደገና ያስገቡ።';
+
+  @override
+  String get awaitingApprovalHint =>
+      'Taxi Pay ንግድዎን እየገመገመ ነው። ለማፋጠን ሰነዶችዎን ይጫኑ።';
+
+  @override
+  String get addPayout => 'የክፍያ መቀበያ ሂሳብ ያክሉ';
+
+  @override
+  String get addPayoutHint =>
+      'ስራ ከመጀመርዎ በፊት ያስፈልጋል። Taxi Pay ገንዘብዎን የሚልከው ወደዚህ ነው።';
+
+  @override
+  String get finishSetup => 'ማዘጋጀቱን ይጨርሱ';
+
+  @override
+  String get finishSetupHint => 'ታክሲዎችዎን ከማሰራትዎ በፊት ጥቂት ደረጃዎች።';
+
+  @override
+  String get later => 'በኋላ';
+
+  @override
+  String get individualUsesYourName => 'እንደ ግለሰብ በራስዎ ስም ይሰራሉ።';
+
+  @override
+  String get tinOptional => 'የግብር ከፋይ መለያ ቁጥር (አማራጭ)';
+
+  @override
+  String get tinInvalid => 'ባለ 10 አሃዝ የግብር ከፋይ መለያ ቁጥር ያስገቡ';
+
+  @override
+  String get addressLine => 'አድራሻ (መንገድ፣ ምልክት)';
+
+  @override
+  String get location => 'አካባቢ';
+
+  @override
+  String get pickOnMap => 'አካባቢውን በካርታ ላይ ይምረጡ';
+
+  @override
+  String get changeLocation => 'ቀይር';
+
+  @override
+  String get mapPickerTitle => 'የንግድ አካባቢ';
+
+  @override
+  String get mapPickerHint => 'ምልክቱን ለማስቀመጥ ካርታውን ይንኩ';
+
+  @override
+  String get useThisLocation => 'ይህን አካባቢ ተጠቀም';
+
+  @override
+  String get submitForReview => 'ለግምገማ አስገባ';
+
+  @override
+  String get businessDetails => 'የንግድ መረጃ';
+
+  @override
+  String get businessSubmitted => 'ለግምገማ ወደ Taxi Pay ተልኳል';
+
+  @override
+  String get businessLocked =>
+      'ንግድዎ ስለጸደቀ ስሙ፣ አይነቱ እና የግብር ቁጥሩ አይቀየሩም። ለመቀየር የTaxi Pay ድጋፍን ያግኙ።';
+
+  @override
+  String get payoutSaved => 'የክፍያ መቀበያ ሂሳብ ተቀምጧል';
+
+  @override
+  String get payoutIntro => 'ተሳፋሪዎችዎ የሚከፍሉትን Taxi Pay የሚልክበት።';
+
+  @override
+  String get walletPhone => 'የዋሌት ስልክ ቁጥር';
+
+  @override
+  String get notSet => 'አልተዘጋጀም';
+
+  @override
+  String get driverRole => 'ሹፌር';
+
+  @override
+  String get driverLogin => 'መግቢያ';
+
+  @override
+  String get canSignIn => 'ሹፌሩ መግባት ይችላል';
+
+  @override
+  String get driverLoginHint =>
+      'በስልካቸው እና በዚህ የይለፍ ቃል በዚህ መተግበሪያ ገብተው የራሳቸውን ታክሲዎች ብቻ ያያሉ።';
+
+  @override
+  String get driverPasswordKeep => 'አዲስ የይለፍ ቃል (ለማቆየት ባዶ ይተዉ)';
+
+  @override
+  String get assignedTaxis => 'የተመደቡ ታክሲዎች';
+
+  @override
+  String get assignedTaxisHint =>
+      'አንድ ታክሲ አንድ ሹፌር አለው፤ እዚህ መምረጥ ወደዚህ ሹፌር ያዛውረዋል።';
+
+  @override
+  String get editDriver => 'ሹፌር አስተካክል';
+
+  @override
+  String get deactivateDriver => 'ሹፌሩን አቦዝን';
+
+  @override
+  String get activateDriver => 'ሹፌሩን አንቃ';
+
+  @override
+  String get yourTaxis => 'የእርስዎ ታክሲዎች';
+
+  @override
+  String get noAssignedTaxis => 'እስካሁን የተመደበልዎ ታክሲ የለም። ባለቤቱ እንዲመድብልዎ ይጠይቁ።';
+
+  @override
+  String get noTaxiReady =>
+      'ለመጀመር ዝግጁ ታክሲ የለም፤ የጸደቀ፣ ንቁ፣ በጸደቀ መስመር ላይ ያለ እና ስራ ላይ ያልሆነ መሆን አለበት።';
+
+  @override
+  String get taxiNotActive => 'አልጸደቀም ወይም ንቁ አይደለም';
+
+  @override
+  String get noRoutesForTaxi => 'እስካሁን የጸደቀ መስመር የለም';
+
+  @override
+  String get takeOver => 'ተረከብ';
+
+  @override
+  String get takeOverHint => 'አንድን ታክሲ በአንድ ጊዜ አንድ ሰው ብቻ ማሰራት ይችላል።';
+
+  @override
+  String get tookOver => 'አሁን ይህን ታክሲ እያሰሩ ነው';
+
+  @override
+  String currentDriver(String name) {
+    return 'አሁን ከ$name ጋር';
+  }
+
+  @override
+  String operatingBy(String name) {
+    return '$name ይህን ታክሲ እያሰራ ነው';
   }
 }

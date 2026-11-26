@@ -12,6 +12,7 @@ import '../../../core/widgets/common.dart';
 import '../../fleet/presentation/seat_grid.dart';
 import '../data/operation_models.dart';
 import '../data/operations_api.dart';
+import '../../auth/presentation/session_controller.dart';
 import 'operations_screen.dart';
 import '../../../core/theme/app_icons.dart';
 
@@ -36,7 +37,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 10), (_) => ref.invalidate(liveTaxiProvider(widget.taxiId)));
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) => ref.invalidate(liveTaxiProvider(widget.taxiId)));
   }
 
   @override
@@ -58,8 +59,10 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
     final l10n = context.l10n;
     final live = ref.watch(liveTaxiProvider(widget.taxiId));
     final api = ref.read(operationsApiProvider);
+    final isDriver = ref.watch(sessionProvider).value?.isDriver ?? false;
     return Scaffold(
       appBar: AppBar(title: Text(live.value?.plateNumber ?? l10n.taxi), actions: [
+        if (!isDriver) ...[
         IconButton(
           tooltip: l10n.shareTaxiQr,
           icon: const Icon(AppIcons.qrCode2),
@@ -70,6 +73,7 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
           icon: const Icon(AppIcons.infoOutline),
           onPressed: () => context.push('/fleet/taxis/${widget.taxiId}'),
         ),
+        ],
       ]),
       body: AsyncBody(
         value: live,
@@ -81,8 +85,21 @@ class _LiveTaxiScreenState extends ConsumerState<LiveTaxiScreen> {
             if (op == null)
               Text(l10n.noActiveOperations)
             else ...[
+              if (!op.inControl) ...[
+                _ControlBanner(
+                  name: op.controller?.name ?? '',
+                  busy: _busy,
+                  onTakeOver: () => _act(() async {
+                    await api.takeOver(op.id);
+                    if (mounted) {
+                      ScaffoldMessenger.of(this.context).showSnackBar(SnackBar(content: Text(this.context.l10n.tookOver)));
+                    }
+                  }),
+                ),
+                const SizedBox(height: 16),
+              ],
               InkWell(
-                onTap: () => context.push('/fleet/routes/${op.route.id}'),
+                onTap: isDriver ? null : () => context.push('/fleet/routes/${op.route.id}'),
                 child: Row(children: [
                   Flexible(
                     child: Text('${op.route.name ?? ''} · ${op.driver.name ?? ''}', style: Theme.of(context).textTheme.titleMedium),
@@ -231,6 +248,45 @@ extension on _LiveTaxiScreenState {
 }
 
 /// A payment on the trip: amount, payer, time, and each passenger (seat, from → to, on board / got off).
+/// Someone else is working this taxi: say who, and offer to take over (one person at a time).
+class _ControlBanner extends StatelessWidget {
+  const _ControlBanner({required this.name, required this.busy, required this.onTakeOver});
+
+  final String name;
+  final bool busy;
+  final VoidCallback onTakeOver;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+      decoration: BoxDecoration(
+        color: AppTheme.warning.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.warning.withValues(alpha: 0.4)),
+      ),
+      child: Row(children: [
+        const Icon(AppIcons.lock, color: AppTheme.warning),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(l10n.operatingBy(name), style: const TextStyle(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 2),
+            Text(l10n.takeOverHint, style: const TextStyle(fontSize: 12.5)),
+          ]),
+        ),
+        const SizedBox(width: 8),
+        FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(0, 38), padding: const EdgeInsets.symmetric(horizontal: 14)),
+          onPressed: busy ? null : onTakeOver,
+          child: Text(l10n.takeOver),
+        ),
+      ]),
+    );
+  }
+}
+
 class _PaymentTile extends StatelessWidget {
   const _PaymentTile(this.p);
 

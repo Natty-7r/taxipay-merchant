@@ -9,12 +9,21 @@ import '../../merchant/data/merchant_models.dart';
 import '../data/auth_api.dart';
 import '../data/auth_models.dart';
 
-/// Who is signed in: the user plus their merchant business (status drives the approval gate).
+/// Who is signed in: the user, whether they are the owner or a driver, and (for the owner) the business.
 class Session {
-  Session({required this.me, required this.merchant});
+  Session({required this.me, required this.context, this.merchant});
 
   final Me me;
-  final Merchant merchant;
+
+  /// Role and setup checklist; drives the reminders and what a driver can reach.
+  final AppContext context;
+
+  /// The full business profile; only the owner reads it.
+  final Merchant? merchant;
+
+  bool get isDriver => context.isDriver;
+
+  String get businessName => merchant?.businessName ?? context.businessName;
 }
 
 /// Sign-in state for the whole app. `null` = signed out.
@@ -79,9 +88,11 @@ class SessionController extends AsyncNotifier<Session?> {
 
   Future<Session> _load() async {
     final me = await ref.read(authApiProvider).me();
-    final merchant = await ref.read(merchantApiProvider).profile();
-    appLogger.i('Signed in as user ${me.id}, merchant ${merchant.id} (${merchant.status.name})');
-    return Session(me: me, merchant: merchant);
+    final context = await ref.read(merchantApiProvider).context();
+    final merchant = context.isDriver ? null : await ref.read(merchantApiProvider).profile();
+    appLogger.i('Signed in as user ${me.id} (${context.isDriver ? 'driver' : 'owner'}), merchant ${context.merchantId} '
+        '(${context.status.name})');
+    return Session(me: me, context: context, merchant: merchant);
   }
 }
 

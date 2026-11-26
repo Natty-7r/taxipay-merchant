@@ -97,7 +97,7 @@ class _QrPosterScreenState extends ConsumerState<QrPosterScreen> {
     final qr = ref.watch(taxiQrProvider(widget.taxiId));
     final taxi = ref.watch(taxiProvider(widget.taxiId));
     final routes = ref.watch(taxiRoutesProvider(widget.taxiId));
-    final merchant = ref.watch(sessionProvider).value?.merchant.businessName;
+    final merchant = ref.watch(sessionProvider).value?.businessName;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.qrPoster)),

@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/utils/formatters.dart';
@@ -38,15 +39,17 @@ class ApprovalStatusScreen extends ConsumerWidget {
     final session = ref.watch(sessionProvider).value;
     if (session == null) return const SizedBox.shrink();
     final m = session.merchant;
-    final (title, info, icon, color) = switch (m.status) {
+    final status = session.context.status;
+    final (title, info, icon, color) = switch (status) {
       MerchantStatus.rejected => (l10n.statusRejected, l10n.statusRejectedInfo, AppIcons.cancel, AppTheme.error),
       MerchantStatus.suspended => (l10n.statusSuspended, l10n.statusSuspendedInfo, AppIcons.block, AppTheme.error),
       _ => (l10n.statusPending, l10n.statusPendingInfo, AppIcons.hourglassTop, AppTheme.warning),
     };
-    final canEdit = m.status == MerchantStatus.pending || m.status == MerchantStatus.rejected;
+    final canEdit = m != null && (status == MerchantStatus.pending || status == MerchantStatus.rejected);
+    final documents = m?.documents ?? const <MerchantDocument>[];
 
     return Scaffold(
-      appBar: AppBar(title: Text(m.businessName), actions: [
+      appBar: AppBar(title: Text(session.businessName), actions: [
         IconButton(icon: const Icon(AppIcons.logout), tooltip: l10n.logout,
             onPressed: () => ref.read(sessionProvider.notifier).logout()),
       ]),
@@ -68,25 +71,35 @@ class ApprovalStatusScreen extends ConsumerWidget {
                 ]),
                 const SizedBox(height: 12),
                 Text(info),
-                if (m.statusReason != null) ...[
+                if (session.context.statusReason != null) ...[
                   const SizedBox(height: 12),
-                  Text('${l10n.reason}: ${m.statusReason}', style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+                  Text('${l10n.reason}: ${session.context.statusReason}', style: TextStyle(color: color, fontWeight: FontWeight.w600)),
                 ],
               ]),
             ),
           ),
+          if (canEdit) ...[
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () => context.push('/setup/business'),
+              icon: const Icon(AppIcons.storefront),
+              label: Text(l10n.businessDetails),
+            ),
+          ],
+          if (m != null) ...[
           const SizedBox(height: 16),
           Text(l10n.documents, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          if (m.documents.isEmpty) Text(l10n.empty),
-          for (final d in m.documents)
+          if (documents.isEmpty) Text(l10n.empty),
+          for (final d in documents)
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(AppIcons.insertDriveFile),
               title: Text(humanize(d.type)),
               subtitle: Text('${d.fileName} · ${dateTime(d.createdAt)}'),
             ),
-          if (m.status == MerchantStatus.rejected) ...[
+          ],
+          if (canEdit && status == MerchantStatus.rejected) ...[
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () async {

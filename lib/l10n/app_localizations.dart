@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// No description provided for @registerTitle.
   ///
   /// In en, this message translates to:
-  /// **'Register your business'**
+  /// **'Create your account'**
   String get registerTitle;
 
   /// No description provided for @ownerSection.
@@ -1411,6 +1411,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'From {stop} (return)'**
   String fromStopReturn(String stop);
+
+  /// No description provided for @registerIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account. You\'ll set up your business and payout account after signing in.'**
+  String get registerIntro;
+
+  /// No description provided for @setupBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your business'**
+  String get setupBusiness;
+
+  /// No description provided for @setupBusinessHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Needed before you add taxis, routes and drivers.'**
+  String get setupBusinessHint;
+
+  /// No description provided for @applicationRejectedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix your business details and resubmit.'**
+  String get applicationRejectedHint;
+
+  /// No description provided for @awaitingApprovalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxi Pay is reviewing your business. Upload your documents to speed it up.'**
+  String get awaitingApprovalHint;
+
+  /// No description provided for @addPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a payout account'**
+  String get addPayout;
+
+  /// No description provided for @addPayoutHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Needed before you start operating. Taxi Pay sends your money here.'**
+  String get addPayoutHint;
+
+  /// No description provided for @finishSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish setting up'**
+  String get finishSetup;
+
+  /// No description provided for @finishSetupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A few steps before you can run your taxis.'**
+  String get finishSetupHint;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @individualUsesYourName.
+  ///
+  /// In en, this message translates to:
+  /// **'As an individual, you operate under your own name.'**
+  String get individualUsesYourName;
+
+  /// No description provided for @tinOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'TIN (optional)'**
+  String get tinOptional;
+
+  /// No description provided for @tinInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 10-digit TIN'**
+  String get tinInvalid;
+
+  /// No description provided for @addressLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (street, landmark)'**
+  String get addressLine;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @pickOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the location on the map'**
+  String get pickOnMap;
+
+  /// No description provided for @changeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get changeLocation;
+
+  /// No description provided for @mapPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Business location'**
+  String get mapPickerTitle;
+
+  /// No description provided for @mapPickerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the map to place the pin'**
+  String get mapPickerHint;
+
+  /// No description provided for @useThisLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use this location'**
+  String get useThisLocation;
+
+  /// No description provided for @submitForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for review'**
+  String get submitForReview;
+
+  /// No description provided for @businessDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Business details'**
+  String get businessDetails;
+
+  /// No description provided for @businessSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to Taxi Pay for review'**
+  String get businessSubmitted;
+
+  /// No description provided for @businessLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your business is approved, so its name, type and TIN can\'t change. Contact Taxi Pay support to change them.'**
+  String get businessLocked;
+
+  /// No description provided for @payoutSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout account saved'**
+  String get payoutSaved;
+
+  /// No description provided for @payoutIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Where Taxi Pay sends what your passengers pay.'**
+  String get payoutIntro;
+
+  /// No description provided for @walletPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet phone number'**
+  String get walletPhone;
+
+  /// No description provided for @notSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get notSet;
+
+  /// No description provided for @driverRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get driverRole;
+
+  /// No description provided for @driverLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in'**
+  String get driverLogin;
+
+  /// No description provided for @canSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver can sign in'**
+  String get canSignIn;
+
+  /// No description provided for @driverLoginHint.
+  ///
+  /// In en, this message translates to:
+  /// **'They sign in on this app with their phone and this password, and see only their taxis.'**
+  String get driverLoginHint;
+
+  /// No description provided for @driverPasswordKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'New password (leave empty to keep)'**
+  String get driverPasswordKeep;
+
+  /// No description provided for @assignedTaxis.
+  ///
+  /// In en, this message translates to:
+  /// **'Assigned taxis'**
+  String get assignedTaxis;
+
+  /// No description provided for @assignedTaxisHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A taxi has one driver: picking it here moves it to this driver.'**
+  String get assignedTaxisHint;
+
+  /// No description provided for @editDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit driver'**
+  String get editDriver;
+
+  /// No description provided for @deactivateDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate driver'**
+  String get deactivateDriver;
+
+  /// No description provided for @activateDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate driver'**
+  String get activateDriver;
+
+  /// No description provided for @yourTaxis.
+  ///
+  /// In en, this message translates to:
+  /// **'Your taxis'**
+  String get yourTaxis;
+
+  /// No description provided for @noAssignedTaxis.
+  ///
+  /// In en, this message translates to:
+  /// **'No taxis are assigned to you yet. Ask the owner to assign one.'**
+  String get noAssignedTaxis;
+
+  /// No description provided for @noTaxiReady.
+  ///
+  /// In en, this message translates to:
+  /// **'No taxi is ready to start: it needs to be approved, active, on an approved route and not already running.'**
+  String get noTaxiReady;
+
+  /// No description provided for @taxiNotActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Not approved or not active'**
+  String get taxiNotActive;
+
+  /// No description provided for @noRoutesForTaxi.
+  ///
+  /// In en, this message translates to:
+  /// **'No approved route yet'**
+  String get noRoutesForTaxi;
+
+  /// No description provided for @takeOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Take over'**
+  String get takeOver;
+
+  /// No description provided for @takeOverHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only one person can run a taxi at a time.'**
+  String get takeOverHint;
+
+  /// No description provided for @tookOver.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re running this taxi now'**
+  String get tookOver;
+
+  /// No description provided for @currentDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Now with {name}'**
+  String currentDriver(String name);
+
+  /// No description provided for @operatingBy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is running this taxi'**
+  String operatingBy(String name);
 }
 
 class _AppLocalizationsDelegate

@@ -44,6 +44,14 @@ class OperationsApi {
   Future<void> setSeat(int tripId, String code, bool occupied) =>
       _api.put('/api/merchant/trips/$tripId/seats/$code', body: {'occupied': occupied}, map: (_) {});
 
+  /// The owner's taxis, or a driver's assigned ones, with their routes and running operation.
+  Future<List<OperableTaxi>> operableTaxis() => _api.get('/api/merchant/operate/taxis',
+      map: (d) => [for (final t in d as List) OperableTaxi.fromJson(t as Json)]);
+
+  /// Become the one working this taxi (only one person at a time).
+  Future<void> takeOver(int operationId) =>
+      _api.post('/api/merchant/operations/$operationId/take-over', map: (_) {});
+
   Future<LiveTaxi> live(int taxiId) =>
       _api.get('/api/merchant/taxis/$taxiId/live', map: (d) => LiveTaxi.fromJson(d as Json));
 }

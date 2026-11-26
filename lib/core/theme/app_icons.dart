@@ -74,4 +74,13 @@ abstract final class AppIcons {
   static const IconData download = LucideIcons.download;
   static const IconData image = LucideIcons.image;
   static const IconData pdf = LucideIcons.fileDown;
+  static const IconData storefront = LucideIcons.store;
+  static const IconData accountBalanceWalletOutlined = LucideIcons.wallet;
+  static const IconData bank = LucideIcons.landmark;
+  static const IconData mapPin = LucideIcons.mapPin;
+  static const IconData myLocation = LucideIcons.locateFixed;
+  static const IconData keyRound = LucideIcons.keyRound;
+  static const IconData handshake = LucideIcons.handshake;
+  static const IconData building = LucideIcons.building2;
+  static const IconData user = LucideIcons.user;
 }

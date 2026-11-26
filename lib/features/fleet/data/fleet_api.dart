@@ -41,6 +41,16 @@ class FleetApi {
   Future<Driver> createDriver(Json request) =>
       _api.post('/api/merchant/drivers', body: request, map: (d) => Driver.fromJson(d as Json));
 
+  Future<Driver> updateDriver(int id, Json request) =>
+      _api.put('/api/merchant/drivers/$id', body: request, map: (d) => Driver.fromJson(d as Json));
+
+  /// The driver runs exactly these taxis (a taxi has one driver).
+  Future<Driver> assignTaxis(int driverId, List<int> taxiIds) =>
+      _api.put('/api/merchant/drivers/$driverId/taxis', body: {'taxiIds': taxiIds}, map: (d) => Driver.fromJson(d as Json));
+
+  Future<void> setDriverActive(int id, bool active) =>
+      _api.post('/api/merchant/drivers/$id/${active ? 'activate' : 'deactivate'}', map: (_) {});
+
   // ---- routes
   Future<List<RouteInfo>> routes({String? status, int? taxiId}) async => (await _api.getPage(
           '/api/merchant/routes', RouteInfo.fromJson, query: {'size': 100, 'status': status, 'taxiId': taxiId}))

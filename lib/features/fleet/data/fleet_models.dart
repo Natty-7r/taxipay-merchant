@@ -97,7 +97,7 @@ class SeatTemplate {
 
 class Driver {
   Driver({required this.id, required this.fullName, required this.phoneNumber, required this.licenseNumber,
-      required this.licenseExpired, required this.active});
+      required this.licenseExpired, required this.active, this.canLogin = false, this.taxiIds = const []});
 
   final int id;
   final String fullName;
@@ -106,6 +106,12 @@ class Driver {
   final bool licenseExpired;
   final bool active;
 
+  /// Has a password and signs in to the app to run their taxis.
+  final bool canLogin;
+
+  /// Taxis assigned to this driver.
+  final List<int> taxiIds;
+
   factory Driver.fromJson(Json j) => Driver(
         id: (j['id'] as num).toInt(),
         fullName: j['fullName'] as String,
@@ -113,6 +119,8 @@ class Driver {
         licenseNumber: j['licenseNumber'] as String,
         licenseExpired: (j['licenseExpired'] as bool?) ?? false,
         active: (j['active'] as bool?) ?? true,
+        canLogin: (j['canLogin'] as bool?) ?? false,
+        taxiIds: [for (final id in (j['taxiIds'] as List?) ?? const []) (id as num).toInt()],
       );
 }
 

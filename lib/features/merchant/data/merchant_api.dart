@@ -14,6 +14,15 @@ class MerchantApi {
 
   Future<Merchant> profile() => _api.get('/api/merchant/profile', map: (d) => Merchant.fromJson(d as Json));
 
+  Future<AppContext> context() => _api.get('/api/merchant/context', map: (d) => AppContext.fromJson(d as Json));
+
+  /// Business details, submitted for review. An individual operates under the owner's name.
+  Future<Merchant> setUpBusiness(Json body) =>
+      _api.put('/api/merchant/profile/business', body: body, map: (d) => Merchant.fromJson(d as Json));
+
+  Future<Merchant> setPayout(Payout payout) =>
+      _api.put('/api/merchant/profile/payout', body: payout.toJson(), map: (d) => Merchant.fromJson(d as Json));
+
   Future<Dashboard> dashboard() => _api.get('/api/merchant/dashboard', map: (d) => Dashboard.fromJson(d as Json));
 
   Future<void> uploadDocument(String type, Uint8List bytes, String filename) => _api.upload(

@@ -7,7 +7,7 @@
   "passwordHint": "At least 8 characters",
   "required": "Required",
   "noAccount": "New to Taxi Pay? Register your business",
-  "registerTitle": "Register your business",
+  "registerTitle": "Create your account",
   "ownerSection": "Owner",
   "fullName": "Full name",
   "phone": "Phone number",
@@ -337,6 +337,68 @@
   "@fromStopReturn": {
     "placeholders": {
       "stop": {
+        "type": "String"
+      }
+    }
+  },
+  "registerIntro": "Create your account. You'll set up your business and payout account after signing in.",
+  "setupBusiness": "Set up your business",
+  "setupBusinessHint": "Needed before you add taxis, routes and drivers.",
+  "applicationRejectedHint": "Fix your business details and resubmit.",
+  "awaitingApprovalHint": "Taxi Pay is reviewing your business. Upload your documents to speed it up.",
+  "addPayout": "Add a payout account",
+  "addPayoutHint": "Needed before you start operating. Taxi Pay sends your money here.",
+  "finishSetup": "Finish setting up",
+  "finishSetupHint": "A few steps before you can run your taxis.",
+  "later": "Later",
+  "individualUsesYourName": "As an individual, you operate under your own name.",
+  "tinOptional": "TIN (optional)",
+  "tinInvalid": "Enter the 10-digit TIN",
+  "addressLine": "Address (street, landmark)",
+  "location": "Location",
+  "pickOnMap": "Pick the location on the map",
+  "changeLocation": "Change",
+  "mapPickerTitle": "Business location",
+  "mapPickerHint": "Tap the map to place the pin",
+  "useThisLocation": "Use this location",
+  "submitForReview": "Submit for review",
+  "businessDetails": "Business details",
+  "businessSubmitted": "Sent to Taxi Pay for review",
+  "businessLocked": "Your business is approved, so its name, type and TIN can't change. Contact Taxi Pay support to change them.",
+  "payoutSaved": "Payout account saved",
+  "payoutIntro": "Where Taxi Pay sends what your passengers pay.",
+  "walletPhone": "Wallet phone number",
+  "notSet": "Not set",
+  "driverRole": "Driver",
+  "driverLogin": "Sign-in",
+  "canSignIn": "Driver can sign in",
+  "driverLoginHint": "They sign in on this app with their phone and this password, and see only their taxis.",
+  "driverPasswordKeep": "New password (leave empty to keep)",
+  "assignedTaxis": "Assigned taxis",
+  "assignedTaxisHint": "A taxi has one driver: picking it here moves it to this driver.",
+  "editDriver": "Edit driver",
+  "deactivateDriver": "Deactivate driver",
+  "activateDriver": "Activate driver",
+  "yourTaxis": "Your taxis",
+  "noAssignedTaxis": "No taxis are assigned to you yet. Ask the owner to assign one.",
+  "noTaxiReady": "No taxi is ready to start: it needs to be approved, active, on an approved route and not already running.",
+  "taxiNotActive": "Not approved or not active",
+  "noRoutesForTaxi": "No approved route yet",
+  "takeOver": "Take over",
+  "takeOverHint": "Only one person can run a taxi at a time.",
+  "tookOver": "You're running this taxi now",
+  "currentDriver": "Now with {name}",
+  "@currentDriver": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "operatingBy": "{name} is running this taxi",
+  "@operatingBy": {
+    "placeholders": {
+      "name": {
         "type": "String"
       }
     }

@@ -12,6 +12,7 @@ import '../../operations/presentation/operations_screen.dart';
 import '../../payments/presentation/payments_screen.dart';
 import '../data/merchant_api.dart';
 import '../data/merchant_models.dart';
+import 'setup_guard.dart';
 import '../../../core/theme/app_icons.dart';
 
 final dashboardProvider = FutureProvider.autoDispose<Dashboard>((ref) => ref.watch(merchantApiProvider).dashboard());
@@ -47,7 +48,7 @@ class DashboardScreen extends ConsumerWidget {
             GreetingHeader(
               name: fullName,
               title: l10n.hello(firstName),
-              subtitle: session?.merchant.businessName ?? '',
+              subtitle: session?.businessName ?? '',
               trailing: CircleIconButton(
                 icon: AppIcons.notificationsNoneRounded,
                 badge: unread,
@@ -55,6 +56,7 @@ class DashboardScreen extends ConsumerWidget {
                 onPressed: () => context.push('/more/notifications'),
               ),
             ),
+            const SetupReminders(),
             const SizedBox(height: 22),
             HeroCard(
               label: l10n.totalCollected,
@@ -89,7 +91,9 @@ class DashboardScreen extends ConsumerWidget {
               MetricTile(icon: AppIcons.altRoute, value: '${d.approvedRoutes}', label: l10n.approvedRoutes, onTap: () => context.go('/fleet')),
               MetricTile(icon: AppIcons.groupsOutlined, value: '${d.passengers}', label: l10n.passengers, onTap: () => context.go('/payments')),
             ),
-            SectionLabel(l10n.onTheRoad, action: l10n.start, onAction: () => context.push('/operate/start')),
+            SectionLabel(l10n.onTheRoad, action: l10n.start, onAction: () async {
+              if (await ensureSetup(context, ref, forOperating: true) && context.mounted) context.push('/operate/start');
+            }),
             switch (operations) {
               AsyncData(:final value) when value.isEmpty => SoftCard(
                   child: Row(children: [

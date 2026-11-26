@@ -42,7 +42,13 @@ class Trip {
 class Operation {
   Operation({required this.id, required this.taxi, required this.route, required this.driver, required this.status,
       this.startedAt, this.currentTrip, required this.completedTrips, required this.passengers, required this.revenue,
-      this.standingAllowed = false});
+      this.standingAllowed = false, this.controller, this.inControl = true});
+
+  /// Who is working the taxi right now (user id and name).
+  final Ref? controller;
+
+  /// The signed-in user is working it; anyone else takes over first.
+  final bool inControl;
 
   /// Passengers may pay without a seat on this run.
   final bool standingAllowed;
@@ -73,6 +79,58 @@ class Operation {
       passengers: numOf(totals['passengers']).toInt(),
       revenue: numOf(totals['revenue']),
       standingAllowed: (j['standingAllowed'] as bool?) ?? false,
+      controller: objOf(j['controller']) == null ? null : Ref.fromJson(objOf(j['controller'])!),
+      inControl: (j['inControl'] as bool?) ?? true,
+    );
+  }
+}
+
+/// A route a taxi can start on; FORWARD runs [origin] → [destination].
+class RouteChoice {
+  RouteChoice({required this.id, required this.name, this.origin, this.destination});
+
+  final int id;
+  final String name;
+  final String? origin;
+  final String? destination;
+
+  factory RouteChoice.fromJson(Json j) => RouteChoice(
+        id: (j['id'] as num).toInt(),
+        name: j['name'] as String,
+        origin: j['origin'] as String?,
+        destination: j['destination'] as String?,
+      );
+}
+
+/// `GET /api/merchant/operate/taxis` — a taxi the signed-in owner or driver can run.
+class OperableTaxi {
+  OperableTaxi({required this.taxiId, required this.plateNumber, this.sideNumber, required this.operational,
+      this.driver, required this.routes, this.activeOperation});
+
+  final int taxiId;
+  final String plateNumber;
+  final String? sideNumber;
+  final bool operational;
+  final Ref? driver;
+  final List<RouteChoice> routes;
+  final Operation? activeOperation;
+
+  String get title => sideNumber == null || sideNumber!.isEmpty ? plateNumber : '$plateNumber · $sideNumber';
+
+  /// Can start now: approved, active, has a route and isn't already running.
+  bool get startable => operational && routes.isNotEmpty && activeOperation == null;
+
+  factory OperableTaxi.fromJson(Json j) {
+    final op = objOf(j['activeOperation']);
+    final driver = objOf(j['driver']);
+    return OperableTaxi(
+      taxiId: (j['taxiId'] as num).toInt(),
+      plateNumber: j['plateNumber'] as String,
+      sideNumber: j['sideNumber'] as String?,
+      operational: (j['operational'] as bool?) ?? false,
+      driver: driver == null ? null : Ref.fromJson(driver),
+      routes: listOf(j['routes'], RouteChoice.fromJson),
+      activeOperation: op == null ? null : Operation.fromJson(op),
     );
   }
 }

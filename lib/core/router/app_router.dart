@@ -16,7 +16,10 @@ import '../../features/fleet/presentation/qr_poster_screen.dart';
 import '../../features/fleet/presentation/route_screens.dart';
 import '../../features/fleet/presentation/taxi_detail_screen.dart';
 import '../../features/inbox/presentation/inbox_screen.dart';
+import '../../features/merchant/data/merchant_models.dart';
 import '../../features/merchant/presentation/approval_status_screen.dart';
+import '../../features/merchant/presentation/business_setup_screen.dart';
+import '../../features/merchant/presentation/payout_screen.dart';
 import '../../features/merchant/presentation/dashboard_screen.dart';
 import '../../features/operations/presentation/live_taxi_screen.dart';
 import '../../features/operations/presentation/operations_screen.dart';
@@ -38,8 +41,15 @@ String? redirectFor(AsyncValue<Session?> session, String location) {
   final s = session.value;
   if (s == null) return public.contains(location) ? null : '/login';
   if (s.me.mustChangePassword) return location == '/change-password' ? null : '/change-password';
-  if (!s.merchant.approved) return location == '/status' ? null : '/status';
-  if (public.contains(location) || const {'/splash', '/status', '/change-password'}.contains(location)) return '/home';
+  // A suspended business is locked out; otherwise the owner sets things up from home (reminders).
+  if (s.context.status == MerchantStatus.suspended) return location == '/status' ? null : '/status';
+  final home = s.isDriver ? '/operate' : '/home';
+  if (public.contains(location) || const {'/splash', '/change-password'}.contains(location)) return home;
+  if (s.isDriver) {
+    // Drivers run their taxis: Operate and More only.
+    const driverAreas = ['/operate', '/more'];
+    if (!driverAreas.any((a) => location == a || location.startsWith('$a/'))) return home;
+  }
   return null;
 }
 
@@ -58,13 +68,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
       GoRoute(path: '/change-password', builder: (_, _) => const ChangePasswordScreen()),
       GoRoute(path: '/status', builder: (_, _) => const ApprovalStatusScreen()),
+      GoRoute(path: '/setup/business', builder: (_, _) => const BusinessSetupScreen()),
+      GoRoute(path: '/setup/payout', builder: (_, _) => const PayoutScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => _HomeShell(shell: shell),
         branches: [
           StatefulShellBranch(routes: [GoRoute(path: '/home', builder: (_, _) => const DashboardScreen())]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/operate', builder: (_, _) => const OperationsScreen(), routes: [
-              GoRoute(path: 'start', builder: (_, _) => const StartOperationScreen()),
+              GoRoute(path: 'start', builder: (_, s) => StartOperationScreen(taxiId: int.tryParse(s.uri.queryParameters['taxi'] ?? ''))),
               GoRoute(path: 'taxi/:id', builder: (_, s) => LiveTaxiScreen(taxiId: int.parse(s.pathParameters['id']!))),
             ]),
           ]),
@@ -81,6 +93,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ],
               ),
               GoRoute(path: 'drivers/new', builder: (_, _) => const AddDriverScreen()),
+              GoRoute(path: 'drivers/:id', builder: (_, s) => AddDriverScreen(initial: s.extra as Driver?)),
               GoRoute(path: 'routes/new', builder: (_, _) => const AddRouteScreen()),
               GoRoute(
                 path: 'routes/:id',
@@ -112,6 +125,7 @@ class _HomeShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final isDriver = ref.watch(sessionProvider).value?.isDriver ?? false;
     // Something happened (a payment, a review): reload what it touches and say so.
     ref.listen(liveEventsProvider, (_, event) {
       if (event == null) return;
@@ -130,13 +144,18 @@ class _HomeShell extends ConsumerWidget {
         currentIndex: shell.currentIndex,
         onSelect: (i) => shell.goBranch(i, initialLocation: i == shell.currentIndex),
         // Display order: Home, Fleet, [Operate], Payments, More — branch indices stay as declared.
-        items: [
+        items: isDriver
+            ? [
+                BottomBarItem(branch: 1, icon: AppIcons.localTaxi, activeIcon: AppIcons.localTaxi, label: l10n.tabOperate),
+                BottomBarItem(branch: 4, icon: AppIcons.personOutline, activeIcon: AppIcons.person, label: l10n.tabMore),
+              ]
+            : [
           BottomBarItem(branch: 0, icon: AppIcons.homeOutlined, activeIcon: AppIcons.homeRounded, label: l10n.tabHome),
           BottomBarItem(branch: 2, icon: AppIcons.garageOutlined, activeIcon: AppIcons.garageRounded, label: l10n.tabFleet),
           BottomBarItem(branch: 3, icon: AppIcons.receiptLongOutlined, activeIcon: AppIcons.receiptLong, label: l10n.tabPayments),
           BottomBarItem(branch: 4, icon: AppIcons.personOutline, activeIcon: AppIcons.person, label: l10n.tabMore),
         ],
-        center: BottomBarItem(branch: 1, icon: AppIcons.localTaxi, activeIcon: AppIcons.localTaxi, label: l10n.tabOperate),
+        center: isDriver ? null : BottomBarItem(branch: 1, icon: AppIcons.localTaxi, activeIcon: AppIcons.localTaxi, label: l10n.tabOperate),
       ),
     );
   }

@@ -31,7 +31,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noAccount => 'New to Taxi Pay? Register your business';
 
   @override
-  String get registerTitle => 'Register your business';
+  String get registerTitle => 'Create your account';
 
   @override
   String get ownerSection => 'Owner';
@@ -713,5 +713,164 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String fromStopReturn(String stop) {
     return 'From $stop (return)';
+  }
+
+  @override
+  String get registerIntro =>
+      'Create your account. You\'ll set up your business and payout account after signing in.';
+
+  @override
+  String get setupBusiness => 'Set up your business';
+
+  @override
+  String get setupBusinessHint =>
+      'Needed before you add taxis, routes and drivers.';
+
+  @override
+  String get applicationRejectedHint =>
+      'Fix your business details and resubmit.';
+
+  @override
+  String get awaitingApprovalHint =>
+      'Taxi Pay is reviewing your business. Upload your documents to speed it up.';
+
+  @override
+  String get addPayout => 'Add a payout account';
+
+  @override
+  String get addPayoutHint =>
+      'Needed before you start operating. Taxi Pay sends your money here.';
+
+  @override
+  String get finishSetup => 'Finish setting up';
+
+  @override
+  String get finishSetupHint => 'A few steps before you can run your taxis.';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get individualUsesYourName =>
+      'As an individual, you operate under your own name.';
+
+  @override
+  String get tinOptional => 'TIN (optional)';
+
+  @override
+  String get tinInvalid => 'Enter the 10-digit TIN';
+
+  @override
+  String get addressLine => 'Address (street, landmark)';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get pickOnMap => 'Pick the location on the map';
+
+  @override
+  String get changeLocation => 'Change';
+
+  @override
+  String get mapPickerTitle => 'Business location';
+
+  @override
+  String get mapPickerHint => 'Tap the map to place the pin';
+
+  @override
+  String get useThisLocation => 'Use this location';
+
+  @override
+  String get submitForReview => 'Submit for review';
+
+  @override
+  String get businessDetails => 'Business details';
+
+  @override
+  String get businessSubmitted => 'Sent to Taxi Pay for review';
+
+  @override
+  String get businessLocked =>
+      'Your business is approved, so its name, type and TIN can\'t change. Contact Taxi Pay support to change them.';
+
+  @override
+  String get payoutSaved => 'Payout account saved';
+
+  @override
+  String get payoutIntro => 'Where Taxi Pay sends what your passengers pay.';
+
+  @override
+  String get walletPhone => 'Wallet phone number';
+
+  @override
+  String get notSet => 'Not set';
+
+  @override
+  String get driverRole => 'Driver';
+
+  @override
+  String get driverLogin => 'Sign-in';
+
+  @override
+  String get canSignIn => 'Driver can sign in';
+
+  @override
+  String get driverLoginHint =>
+      'They sign in on this app with their phone and this password, and see only their taxis.';
+
+  @override
+  String get driverPasswordKeep => 'New password (leave empty to keep)';
+
+  @override
+  String get assignedTaxis => 'Assigned taxis';
+
+  @override
+  String get assignedTaxisHint =>
+      'A taxi has one driver: picking it here moves it to this driver.';
+
+  @override
+  String get editDriver => 'Edit driver';
+
+  @override
+  String get deactivateDriver => 'Deactivate driver';
+
+  @override
+  String get activateDriver => 'Activate driver';
+
+  @override
+  String get yourTaxis => 'Your taxis';
+
+  @override
+  String get noAssignedTaxis =>
+      'No taxis are assigned to you yet. Ask the owner to assign one.';
+
+  @override
+  String get noTaxiReady =>
+      'No taxi is ready to start: it needs to be approved, active, on an approved route and not already running.';
+
+  @override
+  String get taxiNotActive => 'Not approved or not active';
+
+  @override
+  String get noRoutesForTaxi => 'No approved route yet';
+
+  @override
+  String get takeOver => 'Take over';
+
+  @override
+  String get takeOverHint => 'Only one person can run a taxi at a time.';
+
+  @override
+  String get tookOver => 'You\'re running this taxi now';
+
+  @override
+  String currentDriver(String name) {
+    return 'Now with $name';
+  }
+
+  @override
+  String operatingBy(String name) {
+    return '$name is running this taxi';
   }
 }

@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/common.dart';
 import '../../../core/widgets/ui.dart';
+import '../../merchant/presentation/setup_guard.dart';
 import 'fleet_providers.dart';
 import '../../../core/theme/app_icons.dart';
 
@@ -24,8 +25,10 @@ class FleetScreen extends ConsumerWidget {
             bottom: TabBar(tabs: [Tab(text: l10n.taxis), Tab(text: l10n.drivers), Tab(text: l10n.routes)]),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
               final tab = DefaultTabController.of(context).index;
+              // Taxis and routes need an approved business; drivers only a set-up one.
+              if (!await ensureSetup(context, ref, needsApproval: tab != 1) || !context.mounted) return;
               context.push(['/fleet/taxis/new', '/fleet/drivers/new', '/fleet/routes/new'][tab]);
             },
             child: const Icon(AppIcons.addRounded, size: 28),
@@ -76,10 +79,16 @@ class _DriversTab extends ConsumerWidget {
                     EntityRow(
                       icon: AppIcons.badgeOutlined,
                       title: d.fullName,
-                      subtitle: '${d.phoneNumber} · ${d.licenseNumber}',
+                      subtitle: '${d.phoneNumber} · ${d.licenseNumber}'
+                          '${d.taxiIds.isEmpty ? '' : ' · ${d.taxiIds.length} ${context.l10n.taxis.toLowerCase()}'}',
+                      onTap: () => context.push('/fleet/drivers/${d.id}', extra: d),
                       trailing: d.licenseExpired
                           ? Tooltip(message: context.l10n.licenseExpired, child: const Icon(AppIcons.warningAmberRounded, color: AppTheme.warning))
-                          : (d.active ? null : const StatusChip('INACTIVE')),
+                          : !d.active
+                              ? const StatusChip('INACTIVE')
+                              : d.canLogin
+                                  ? Tooltip(message: context.l10n.canSignIn, child: const Icon(AppIcons.keyRound, color: AppTheme.blue, size: 20))
+                                  : null,
                     ),
                 ]),
               ]),
