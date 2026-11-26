@@ -83,4 +83,5 @@ abstract final class AppIcons {
   static const IconData handshake = LucideIcons.handshake;
   static const IconData building = LucideIcons.building2;
   static const IconData user = LucideIcons.user;
+  static const IconData check = LucideIcons.check;
 }

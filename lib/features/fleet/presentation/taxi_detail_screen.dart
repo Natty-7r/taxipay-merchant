@@ -7,6 +7,8 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/common.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/ui.dart';
+import '../data/fleet_api.dart';
+import '../data/fleet_models.dart';
 import 'fleet_providers.dart';
 import 'seat_grid.dart';
 import '../../../core/theme/app_icons.dart';
@@ -45,7 +47,26 @@ class TaxiDetailScreen extends ConsumerWidget {
           _info(l10n.vehicleType, humanize(t.vehicleType)),
           _info('${l10n.manufacturer} / ${l10n.model}', '${t.manufacturer} ${t.model}${t.year == null ? '' : ' (${t.year})'}'),
           if (t.color != null) _info(l10n.color, t.color!),
-          _info(l10n.defaultDriver, t.defaultDriverName ?? l10n.none),
+          const Divider(height: 32),
+          Row(children: [
+            Expanded(child: Text(l10n.defaultDriver, style: Theme.of(context).textTheme.titleMedium)),
+            TextButton.icon(
+              onPressed: () => _pickDriver(context, ref, t),
+              icon: const Icon(AppIcons.pencil, size: 16),
+              label: Text(t.defaultDriverId == null ? l10n.assignDriver : l10n.change),
+            ),
+          ]),
+          if (t.defaultDriverId == null)
+            Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(l10n.noDriverAssigned))
+          else
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(AppIcons.badgeOutlined),
+              title: Text(t.defaultDriverName ?? ''),
+              subtitle: Text(l10n.driverRunsTaxi),
+              trailing: const Icon(AppIcons.chevronRight),
+              onTap: () => _openDriver(context, ref, t.defaultDriverId!),
+            ),
           const Divider(height: 32),
           Row(children: [
             Expanded(child: Text('${l10n.seatLayout} · ${t.capacity} ${l10n.seats}', style: Theme.of(context).textTheme.titleMedium)),
@@ -58,7 +79,15 @@ class TaxiDetailScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           SeatGrid(rows: t.seatRows, sideSeats: t.sideSeats, seatBuilder: (code) => SeatBox(code)),
           const Divider(height: 32),
-          Text(l10n.routes, style: Theme.of(context).textTheme.titleMedium),
+          Row(children: [
+            Expanded(child: Text(l10n.routes, style: Theme.of(context).textTheme.titleMedium)),
+            if (t.operational)
+              TextButton.icon(
+                onPressed: () => _assignRoute(context, ref),
+                icon: const Icon(AppIcons.add, size: 16),
+                label: Text(l10n.assignToRoute),
+              ),
+          ]),
           const SizedBox(height: 4),
           _TaxiRoutes(taxiId: taxiId),
           const Divider(height: 32),
@@ -78,6 +107,87 @@ class TaxiDetailScreen extends ConsumerWidget {
         ]),
       ),
     );
+  }
+
+  /// Opens the driver's page (edit, sign-in, their taxis).
+  Future<void> _openDriver(BuildContext context, WidgetRef ref, int driverId) async {
+    final drivers = await ref.read(driversProvider.future);
+    final driver = drivers.where((d) => d.id == driverId).firstOrNull;
+    if (driver != null && context.mounted) context.push('/fleet/drivers/${driver.id}', extra: driver);
+  }
+
+  Future<void> _pickDriver(BuildContext context, WidgetRef ref, Taxi t) async {
+    final l10n = context.l10n;
+    final drivers = (await ref.read(driversProvider.future)).where((d) => d.active).toList();
+    if (!context.mounted) return;
+    // A wrapped value so "no driver" (null) can be told apart from closing the sheet.
+    final picked = await showModalBottomSheet<({int? id})>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheet) => SafeArea(
+        child: ListView(shrinkWrap: true, children: [
+          for (final d in drivers)
+            ListTile(
+              leading: const Icon(AppIcons.badgeOutlined),
+              title: Text(d.fullName),
+              subtitle: Text(d.phoneNumber),
+              trailing: d.id == t.defaultDriverId ? const Icon(AppIcons.check, color: AppTheme.success) : null,
+              onTap: () => Navigator.pop(sheet, (id: d.id)),
+            ),
+          if (t.defaultDriverId != null)
+            ListTile(
+              leading: const Icon(AppIcons.close),
+              title: Text(l10n.noDriver),
+              onTap: () => Navigator.pop(sheet, (id: null)),
+            ),
+          ListTile(
+            leading: const Icon(AppIcons.add),
+            title: Text(l10n.addDriver),
+            onTap: () {
+              Navigator.pop(sheet);
+              context.push('/fleet/drivers/new');
+            },
+          ),
+        ]),
+      ),
+    );
+    if (picked == null || picked.id == t.defaultDriverId || !context.mounted) return;
+    final ok = await runAction(context, () => ref.read(fleetApiProvider).setTaxiDriver(taxiId, picked.id));
+    if (ok) {
+      ref.invalidate(taxiProvider(taxiId));
+      ref.invalidate(driversProvider);
+      ref.invalidate(taxisProvider);
+    }
+  }
+
+  Future<void> _assignRoute(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final routes = await ref.read(fleetApiProvider).routes(status: 'APPROVED');
+    final current = (await ref.read(taxiRoutesProvider(taxiId).future)).map((r) => r.id).toSet();
+    final candidates = routes.where((r) => !current.contains(r.id)).toList();
+    if (!context.mounted) return;
+    final route = await showModalBottomSheet<RouteInfo>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheet) => SafeArea(
+        child: ListView(shrinkWrap: true, children: [
+          if (candidates.isEmpty) Padding(padding: const EdgeInsets.all(20), child: Text(l10n.noApprovedRoutes)),
+          for (final r in candidates)
+            ListTile(
+              leading: const Icon(AppIcons.altRoute),
+              title: Text(r.name),
+              subtitle: Text(r.stops.join(' → '), maxLines: 1, overflow: TextOverflow.ellipsis),
+              onTap: () => Navigator.pop(sheet, r),
+            ),
+        ]),
+      ),
+    );
+    if (route == null || !context.mounted) return;
+    final ok = await runAction(context, () => ref.read(fleetApiProvider).assignTaxi(route.id, taxiId));
+    if (ok) {
+      ref.invalidate(taxiRoutesProvider(taxiId));
+      ref.invalidate(routesProvider);
+    }
   }
 
   Widget _info(String label, String value) => Padding(

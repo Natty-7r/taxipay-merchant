@@ -861,4 +861,26 @@ class AppLocalizationsAm extends AppLocalizations {
   String operatingBy(String name) {
     return '$name ይህን ታክሲ እያሰራ ነው';
   }
+
+  @override
+  String get assignDriver => 'ሹፌር መድብ';
+
+  @override
+  String get change => 'ቀይር';
+
+  @override
+  String get noDriver => 'ሹፌር የለም';
+
+  @override
+  String get noDriverAssigned =>
+      'ሹፌር አልተመደበም። ሹፌሩ ይህን ታክሲ ያሰራል፣ ገብቶም ሊያንቀሳቅሰው ይችላል።';
+
+  @override
+  String get driverRunsTaxi => 'ይህን ታክሲ ያሰራል · ሹፌሩን ለማየት ይንኩ';
+
+  @override
+  String get assignToRoute => 'ወደ መስመር ጨምር';
+
+  @override
+  String get noApprovedRoutes => 'ሌላ የጸደቀ መስመር የለም። መጀመሪያ መስመር ፈጥረው ያስጸድቁ።';
 }

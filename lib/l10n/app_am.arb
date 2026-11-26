@@ -266,5 +266,12 @@
   "takeOverHint": "አንድን ታክሲ በአንድ ጊዜ አንድ ሰው ብቻ ማሰራት ይችላል።",
   "tookOver": "አሁን ይህን ታክሲ እያሰሩ ነው",
   "currentDriver": "አሁን ከ{name} ጋር",
-  "operatingBy": "{name} ይህን ታክሲ እያሰራ ነው"
+  "operatingBy": "{name} ይህን ታክሲ እያሰራ ነው",
+  "assignDriver": "ሹፌር መድብ",
+  "change": "ቀይር",
+  "noDriver": "ሹፌር የለም",
+  "noDriverAssigned": "ሹፌር አልተመደበም። ሹፌሩ ይህን ታክሲ ያሰራል፣ ገብቶም ሊያንቀሳቅሰው ይችላል።",
+  "driverRunsTaxi": "ይህን ታክሲ ያሰራል · ሹፌሩን ለማየት ይንኩ",
+  "assignToRoute": "ወደ መስመር ጨምር",
+  "noApprovedRoutes": "ሌላ የጸደቀ መስመር የለም። መጀመሪያ መስመር ፈጥረው ያስጸድቁ።"
 }

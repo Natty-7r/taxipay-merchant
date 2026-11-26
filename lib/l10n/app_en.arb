@@ -402,5 +402,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "assignDriver": "Assign driver",
+  "change": "Change",
+  "noDriver": "No driver",
+  "noDriverAssigned": "No driver assigned. The driver runs this taxi and can sign in to operate it.",
+  "driverRunsTaxi": "Runs this taxi · tap to see the driver",
+  "assignToRoute": "Add to route",
+  "noApprovedRoutes": "No other approved route. Create a route and get it approved first."
 }

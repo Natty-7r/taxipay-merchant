@@ -1699,6 +1699,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} is running this taxi'**
   String operatingBy(String name);
+
+  /// No description provided for @assignDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign driver'**
+  String get assignDriver;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @noDriver.
+  ///
+  /// In en, this message translates to:
+  /// **'No driver'**
+  String get noDriver;
+
+  /// No description provided for @noDriverAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'No driver assigned. The driver runs this taxi and can sign in to operate it.'**
+  String get noDriverAssigned;
+
+  /// No description provided for @driverRunsTaxi.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs this taxi · tap to see the driver'**
+  String get driverRunsTaxi;
+
+  /// No description provided for @assignToRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to route'**
+  String get assignToRoute;
+
+  /// No description provided for @noApprovedRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'No other approved route. Create a route and get it approved first.'**
+  String get noApprovedRoutes;
 }
 
 class _AppLocalizationsDelegate

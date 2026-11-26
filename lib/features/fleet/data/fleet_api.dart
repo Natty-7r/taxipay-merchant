@@ -78,6 +78,10 @@ class FleetApi {
   Future<RouteInfo> submitRoute(int id) =>
       _api.post('/api/merchant/routes/$id/submit', map: (d) => RouteInfo.fromJson(d as Json));
 
+  /// The taxi's driver; null removes it.
+  Future<Taxi> setTaxiDriver(int taxiId, int? driverId) =>
+      _api.put('/api/merchant/taxis/$taxiId/driver', body: {'driverId': driverId}, map: (d) => Taxi.fromJson(d as Json));
+
   Future<RouteInfo> assignTaxi(int routeId, int taxiId) => _api.post('/api/merchant/routes/$routeId/taxis',
       body: {'taxiId': taxiId}, map: (d) => RouteInfo.fromJson(d as Json));
 }

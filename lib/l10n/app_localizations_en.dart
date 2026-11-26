@@ -873,4 +873,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String operatingBy(String name) {
     return '$name is running this taxi';
   }
+
+  @override
+  String get assignDriver => 'Assign driver';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get noDriver => 'No driver';
+
+  @override
+  String get noDriverAssigned =>
+      'No driver assigned. The driver runs this taxi and can sign in to operate it.';
+
+  @override
+  String get driverRunsTaxi => 'Runs this taxi · tap to see the driver';
+
+  @override
+  String get assignToRoute => 'Add to route';
+
+  @override
+  String get noApprovedRoutes =>
+      'No other approved route. Create a route and get it approved first.';
 }

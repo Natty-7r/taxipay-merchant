@@ -146,9 +146,15 @@ class _AddDriverScreenState extends ConsumerState<AddDriverScreen> {
                 CheckboxListTile(
                   value: _taxiIds.contains(t.id),
                   onChanged: (v) => setState(() => v == true ? _taxiIds.add(t.id) : _taxiIds.remove(t.id)),
-                  secondary: const Icon(AppIcons.localTaxi),
                   title: Text(t.title, style: const TextStyle(fontWeight: FontWeight.w700)),
                   subtitle: driverOf(t) == null ? null : Text(l10n.currentDriver(driverOf(t)!)),
+                  // The box toggles assignment; the arrow opens the taxi.
+                  controlAffinity: ListTileControlAffinity.leading,
+                  secondary: IconButton(
+                    tooltip: l10n.viewTaxi,
+                    icon: const Icon(AppIcons.chevronRight),
+                    onPressed: () => context.push('/fleet/taxis/${t.id}'),
+                  ),
                 ),
             ]),
           const SizedBox(height: 28),
